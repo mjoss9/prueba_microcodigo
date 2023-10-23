@@ -17,7 +17,8 @@ entity comp_mem_shared is
         data_buss : out std_logic_vector(7 downto 0);
         addr_mem_micro : out std_logic_vector(6 downto 0);
         rd : out std_logic_vector(7 downto 0);
-        RA : out std_logic_vector(7 downto 0)
+        RA : out std_logic_vector(7 downto 0);
+        descod1 : out std_logic_vector(21 downto 0)
     );
 end comp_mem_shared;
 
@@ -128,7 +129,33 @@ begin
 
 ----------------- Conexiones para la Unidad de ejecucion ---------------------
 -------------------------------------------------------------------------------
+-- Conecciones entre Mux, ALU, acumulador y registro de banderas
+MUX_0 : mux2a1_rd port map(
+    in_0 => to_integer(unsigned(data_in)),
+    in_1 => data_bus,
+    s => descod_signals(21), --- DESCODIFICADOR
+    y => in_alu_b);
 
+ALU_0 : ALU port map(
+    in_0 => data_out,
+    in_1 => in_alu_b,
+    c_in => out_flags_alu(0),
+    s => descod_signals(11 downto 0),  --DESCODIFICADOR
+    alu_out => out_alu,
+    C => out_flags_alu(0),
+    V => out_flags_alu(1),
+    H => out_flags_alu(2),
+    N => out_flags_alu(3),
+    Z => out_flags_alu(4),
+    P => out_flags_alu(5)
+);
+
+ACUMULADOR_0 : acumulador port map(
+    in_0 => out_alu,
+	 clock => clk,
+    control => control_signals(11),
+    Q => data_out
+);
 -------------- Conexiones para la unidad de direccionamiento -----------------------
 -------------------------------------------------------------------------------
 -- Conexiones para el registro de instrucciones
@@ -183,6 +210,30 @@ begin
 
 --------------------- Conexiones para la logica de control --------------------
 -------------------------------------------------------------------------------
+----
+-- Descodificador
+DESCODIFICADOR_0 : descod port map(
+    data_in => cod_op(3 downto 0),
+    data_out => descod_signals
+);
+
+-- LCT de banderas
+LCT_BANDERAS_0 : LCT_banderas port map(
+    N_in => out_flags_alu(3),
+    Z_in => out_flags_alu(4),
+    P_in => out_flags_alu(5),
+    H_in => out_flags_alu(2),
+    C_in => out_flags_alu(0),
+    V_in => out_flags_alu(1),
+    s => descod_signals(19 downto 12),  -- DESCODIFICADOR
+    clock => control_signals(8),
+    N_out => flags(3),
+    Z_out => flags(4),
+    P_out => flags(5),
+    H_out => flags(2),
+    C_out => flags(0),
+    V_out => flags(1)
+);
 
 -- Memoria para almacenar el microcodigo
     MEM_MICRO_COD_0 : mem_micro_cod port map(
@@ -207,6 +258,7 @@ data_buss <= data_bus;
 addr_mem_micro <= cod_op(3 downto 0)&microsec;
 rd <= out_reg_direc;
 RA <= cod_argu;
+descod1 <= descod_signals;
 
 end rtl;
 

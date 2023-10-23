@@ -26,6 +26,9 @@ architecture rtl of memoria is
         4 => "00001001",
         5 => "00000000",
         6 => "00000000",
+
+		10 => "00001010",
+		11 => "00000100",
         -- Finalizando a memoria com zeros
         others => "00000000"
     );
