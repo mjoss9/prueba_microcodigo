@@ -5,16 +5,19 @@ use ieee.numeric_std.all;
 entity comp_mem_shared is
     port (
         clk : in std_logic;
+        pi_in : in integer range 0 to 255;
         data_in : in std_logic_vector(7 downto 0);
         data_out : buffer std_logic_vector(7 downto 0);
         flags : buffer std_logic_vector(5 downto 0);
         RI : out std_LOGIC_VECTOR(7 downto 0);
         PI : out integer range -128 to 127;
         Micro_secuencia : out std_logic_vector(2 downto 0);
-        signal_control : out std_LOGIC_VECTOR(10 downto 0);
+        signal_control : out std_LOGIC_VECTOR(11 downto 0);
         cod_ope : out std_LOGIC_VECTOR(7 downto 0);
         data_buss : out std_logic_vector(7 downto 0);
-        addr_mem_micro : out std_logic_vector(6 downto 0)
+        addr_mem_micro : out std_logic_vector(6 downto 0);
+        rd : out std_logic_vector(7 downto 0);
+        RA : out std_logic_vector(7 downto 0)
     );
 end comp_mem_shared;
 
@@ -90,7 +93,7 @@ component mem_micro_cod is
     port (
         clk : in std_logic;
         addr : in std_logic_vector(6 downto 0);
-        data : out std_logic_vector(10 downto 0)
+        data : out std_logic_vector(11 downto 0)
     );
 end component mem_micro_cod;
 
@@ -119,7 +122,7 @@ signal out_reg_direc : std_logic_vector(7 downto 0);
 signal descod_signals : std_logic_vector(21 downto 0);
 
 signal microsec : std_logic_vector(2 downto 0);
-signal control_signals : std_logic_vector(10 downto 0);
+signal control_signals : std_logic_vector(11 downto 0);
 
 begin
 
@@ -132,16 +135,23 @@ begin
     REG_INSTRUCCIONES_0 : acumulador port map(
         in_0 => data_bus,
         clock => clk,
-		  control => control_signals(8),
+		control => control_signals(10),
         Q => cod_op
+    );
+-- Conxiones para el registro de argumento
+    REG_ARGUMENTO_0 : acumulador port map(
+        in_0 => data_bus,
+        clock => clk,
+        control => control_signals(9),
+        Q => cod_argu
     );
 	 
 -- Conexiones del puntero de instrucciones
     PUNTERO_INSTRUCCIONES_0 : puntero port map(
-        dat => to_integer(unsigned(data_bus(7 downto 0))),
-        I_D => control_signals(6),
-        load => '0', ---CONTROL
-        enable => control_signals(5), ---CONTROL
+        dat => pi_in,
+        I_D => control_signals(8),
+        load => control_signals(7), ---CONTROL
+        enable => control_signals(6), ---CONTROL
         clock => clk,
         pointer => pointer
     );
@@ -150,7 +160,7 @@ begin
     MUX_1 : mux2a1_rd port map(
         in_0 => pointer,
         in_1 => cod_argu,
-        s => '0',
+        s => control_signals(5),
         y => in_reg_direc
     );
     
@@ -158,12 +168,12 @@ begin
     REG_DIRECCIONES_0 : acumulador port map(
         in_0 => in_reg_direc,
         clock => clk,
-		  control => control_signals(6),
+		  control => control_signals(4),
         Q => out_reg_direc
     );
 -- -- Conexiones para la memoria
     MEMORIA_0 : memoria port map(
-		  control => control_signals(7),
+		  control => control_signals(3),
         clock => clk,
         s_22 => '0', ---DESCODIFICADOR
         address => to_integer(unsigned(out_reg_direc)),
@@ -184,8 +194,8 @@ begin
 -- Generador de la microsecuencia
     GEN_MICROSEC_0 : generador_microsec port map(
         clk => clk,
-        reset => control_signals(9),
-        enable => control_signals(10),
+        reset => control_signals(1),
+        enable => control_signals(0),
         q => microsec
     );
 RI <= cod_op;
@@ -195,6 +205,8 @@ signal_control <= control_signals;
 cod_ope <= cod_op;
 data_buss <= data_bus;
 addr_mem_micro <= cod_op(3 downto 0)&microsec;
+rd <= out_reg_direc;
+RA <= cod_argu;
 
 end rtl;
 

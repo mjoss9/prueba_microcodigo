@@ -7,21 +7,25 @@ entity mem_micro_cod is
     port (
         clk : in std_logic;
         addr : in std_logic_vector(6 downto 0);
-        data : out std_logic_vector(10 downto 0)
+        data : out std_logic_vector(11 downto 0)
     );
 end mem_micro_cod;
 
 architecture rtl of mem_micro_cod is
-    type mem_type is array (0 to 127) of std_logic_vector(10 downto 0);
+    type mem_type is array (0 to 127) of std_logic_vector(11 downto 0);
     signal mem : mem_type := (
-		  0  => "01000000000",
-        64 => "00011000001",
-        65 => "00000010001",
-        66 => "00100100001",
-        67 => "00000110001",
-        68 => "00000110001",
+		0  => "000011000001",
+        1  => "000000010001",
+        2  => "010000000011",
+
+        64 => "000000010001",
+        65 => "010101000001",
+        66 => "000000010001",
+        67 => "001000000001",
+        68 => "000000110001",
+        69 => "100101000011",
         -- Finalizando a memoria com zeros
-        others => "00000000000"
+        others => "000000000000"
     );
 
 begin
