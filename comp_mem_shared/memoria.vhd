@@ -43,12 +43,9 @@ begin
 					ram(address) <= data_in;
 				end if;
 			end if;
-			
-			-- Register the address for reading
-			addr_reg <= address;
 		end if;
 	end process;
 	
-	data_out <= ram(addr_reg);
+	data_out <= ram(address);
 	
 end rtl;
