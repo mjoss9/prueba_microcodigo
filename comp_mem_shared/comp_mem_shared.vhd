@@ -200,9 +200,9 @@ ACUMULADOR_0 : acumulador port map(
     );
 -- -- Conexiones para la memoria
     MEMORIA_0 : memoria port map(
-		  control => control_signals(3),
+		control => control_signals(3),
         clock => clk,
-        s_22 => '0', ---DESCODIFICADOR
+        s_22 => descod_signals(20), ---DESCODIFICADOR
         address => to_integer(unsigned(out_reg_direc)),
         data_in => "00000000",
         data_out => data_bus
