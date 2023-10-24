@@ -204,7 +204,7 @@ ACUMULADOR_0 : acumulador port map(
         clock => clk,
         s_22 => descod_signals(20), ---DESCODIFICADOR
         address => to_integer(unsigned(out_reg_direc)),
-        data_in => "00000000",
+        data_in => data_out,
         data_out => data_bus
     );
 

@@ -24,8 +24,6 @@ architecture rtl of memoria is
         2 => "00000000",
         3 => "00000000",
         4 => "00001001",
-        5 => "00000000",
-        6 => "00000000",
 
 		10 => "00001010", -- inc mem
 		11 => "00000100", -- arg
@@ -33,9 +31,9 @@ architecture rtl of memoria is
 		13 => "00001101", -- sta mem
 		14 => "00000101", -- arg
 
-		-- 15 => "00000100", -- not acc
-		-- 16 => "00001100", -- lda acc
-		-- 17 => "00000101", -- arg
+		15 => "00000100", -- not acc
+		16 => "00001100", -- lda acc
+		17 => "00000101", -- arg
         -- Finalizando a memoria com zeros
         others => "00000000"
     );
