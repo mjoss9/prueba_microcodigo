@@ -14,7 +14,7 @@ entity comp_mem_shared is
         RI : out std_LOGIC_VECTOR(7 downto 0);
         PI : out integer range 0 to 65536;
         Micro_secuencia : out std_logic_vector(2 downto 0);
-        signal_control : out std_LOGIC_VECTOR(11 downto 0);
+        signal_control : out std_LOGIC_VECTOR(12 downto 0);
         cod_ope : out std_LOGIC_VECTOR(7 downto 0);
         data_buss : out std_logic_vector(7 downto 0);
         addr_mem_micro : out std_logic_vector(10 downto 0);
@@ -44,8 +44,9 @@ component AcumuladorEN is
     port(inAc: in std_logic_vector(7 downto 0);		-- Entrada del acumulador
 	  outAc: out std_logic_vector(7 downto 0);	-- Salida del acumulador
 	  enAc: in std_logic;					-- Habilitador del acumulador
+	  ctrlAc:	in std_logic;					-- Control para el descodificador
 	  clk: in std_logic						-- Reloj de disparo
-    );
+);
 end component AcumuladorEN;
 
 -- Registro de banderas
@@ -134,7 +135,7 @@ component mem_micro_cod is
     port (
         clk : in std_logic;
         addr : in std_logic_vector(10 downto 0);
-        data : out std_logic_vector(11 downto 0)
+        data : out std_logic_vector(12 downto 0)
     );
 end component mem_micro_cod;
 
@@ -165,7 +166,7 @@ signal out_interfaz_A : std_logic_vector(7 downto 0);
 signal descod_signals : std_logic_vector(30 downto 0);
 
 signal microsec : std_logic_vector(2 downto 0);
-signal control_signals : std_logic_vector(11 downto 0);
+signal control_signals : std_logic_vector(12 downto 0);
 
 begin
 
@@ -197,21 +198,24 @@ ALU_1 : ALU_mux port map(
 ACUMULADOR_A_0 : AcumuladorEN port map(
     inAc => out_alu,
     outAc => A,
-    enAc => descod_signals(10),  --DESCODIFICADOR
+    enAc => control_signals(1),  
+	 ctrlAc => descod_signals(10),	--DESCODIFICADOR
     clk => clk
 );
 
 ACUMULADOR_B_0 : AcumuladorEN port map(
     inAc => out_alu,
     outAc => B,
-    enAc => descod_signals(9),  --DESCODIFICADOR
+    enAc => control_signals(1),
+	 ctrlAc => descod_signals(9),	--DESCODIFICADOR
     clk => clk
 );
 
 ACUMULADOR_C_0 : AcumuladorEN port map(
     inAc => out_alu,
     outAc => C,
-    enAc => descod_signals(8),  --DESCODIFICADOR
+    enAc => control_signals(1),
+	 ctrlAc => descod_signals(8),	--DESCODIFICADOR
     clk => clk
 );
 

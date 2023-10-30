@@ -5,17 +5,20 @@ entity AcumuladorEN is
 port(inAc: in std_logic_vector(7 downto 0);		-- Entrada del acumulador
 	  outAc: out std_logic_vector(7 downto 0);	-- Salida del acumulador
 	  enAc: in std_logic;					-- Habilitador del acumulador
+	  ctrlAc:	in std_logic;					-- Control para el descodificador
 	  clk: in std_logic						-- Reloj de disparo
 );
 end AcumuladorEN;
 
 architecture arch of AcumuladorEN is
 begin
-	process(enAC,clk,inAc)
+	process(enAC,clk,inAc,ctrlAc)
 	begin
 	if(enAc = '1') then
 		if(clk'event and clk = '1') then
-			outAc <= inAc;
+			if(ctrlAc = '1') then
+				outAc <= inAc;
+			end if;
 		end if;
 	end if;
 	end process;
