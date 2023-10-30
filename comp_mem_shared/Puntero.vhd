@@ -4,13 +4,13 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity puntero is
-port(dat: in integer range 0 to 255;	--Dato
+port(dat: in integer range 0 to 65536;	--Dato
 		I_D,load,enable,clock: in std_logic;  --Incremento/decremento, cargar, habilitar, clock
-		pointer: out integer range -128 to 127);  --Puntero
+		pointer: out integer range 0 to 65536);  --Puntero
 end puntero;
 
 architecture arch of puntero is
-	signal pointer_aux : integer range -128 to 127 := 0;
+	signal pointer_aux : integer range 0 to 65536 := 0;
 begin
 	--pointer_aux <= 0;
 	process(enable,clock,load,I_D,pointer_aux)

@@ -6,13 +6,13 @@ use ieee.numeric_std.all;
 entity mem_micro_cod is
     port (
         clk : in std_logic;
-        addr : in std_logic_vector(6 downto 0);
+        addr : in std_logic_vector(10 downto 0);
         data : out std_logic_vector(11 downto 0)
     );
 end mem_micro_cod;
 
 architecture rtl of mem_micro_cod is
-    type mem_type is array (0 to 127) of std_logic_vector(11 downto 0);
+    type mem_type is array (0 to 2048) of std_logic_vector(11 downto 0);
     signal mem : mem_type := (
 		0  => "000011000001",  --- Instrucion de comienzo
         1  => "000000010001",
