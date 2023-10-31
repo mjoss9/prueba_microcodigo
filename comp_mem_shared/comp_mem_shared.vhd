@@ -5,19 +5,19 @@ use ieee.numeric_std.all;
 entity comp_mem_shared is
     port (
         clk : in std_logic;
-        pi_in : in integer range 0 to 65536;
+        pi_in : in integer range 0 to 65535;
         data_in : in std_logic_vector(7 downto 0);
         A : inout std_logic_vector(7 downto 0);
         B : inout std_logic_vector(7 downto 0);
         C : inout std_logic_vector(7 downto 0);
         flags : buffer std_logic_vector(5 downto 0);
         RI : out std_LOGIC_VECTOR(7 downto 0);
-        PI : out integer range 0 to 65536;
-        Micro_secuencia : out std_logic_vector(2 downto 0);
+        PI : out integer range 0 to 65535;
+        Micro_secuencia : out std_logic_vector(3 downto 0);
         signal_control : out std_LOGIC_VECTOR(12 downto 0);
         cod_ope : out std_LOGIC_VECTOR(7 downto 0);
         data_buss : out std_logic_vector(7 downto 0);
-        addr_mem_micro : out std_logic_vector(10 downto 0);
+        addr_mem_micro : out std_logic_vector(11 downto 0);
         rd : out std_logic_vector(15 downto 0);
         RA : out std_logic_vector(15 downto 0);
         descod1 : out std_logic_vector(30 downto 0)
@@ -87,14 +87,14 @@ end component descodUSCE;
 
 -- Puntero de instrucciones
 component puntero is
-    port(dat: in integer range 0 to 65536;	--Dato
+    port(dat: in integer range 0 to 65535;	--Dato
 		I_D,load,enable,clock: in std_logic;  --Incremento/decremento, cargar, habilitar, clock
-		pointer: out integer range 0 to 65536);  --Puntero
+		pointer: out integer range 0 to 65535);  --Puntero
 end component puntero;
 
 -- Mux 2 a 1 con salida de 16 bits
 component mux16b2a1 is
-    port(	in_0			:	IN integer range 0 to 65536;--Entradas del multiplexor
+    port(	in_0			:	IN integer range 0 to 65535;--Entradas del multiplexor
 		in_1			:	IN STD_LOGIC_VECTOR (15 DOWNTO 0);--Entradas del multiplexor
 		s				:	in std_logic;
 		y				:	OUT STD_LOGIC_VECTOR (15 DOWNTO 0));--Salida del multiplexor
@@ -134,7 +134,7 @@ end component LCT_banderas;
 component mem_micro_cod is
     port (
         clk : in std_logic;
-        addr : in std_logic_vector(10 downto 0);
+        addr : in std_logic_vector(11 downto 0);
         data : out std_logic_vector(12 downto 0)
     );
 end component mem_micro_cod;
@@ -144,8 +144,7 @@ component generador_microsec is
     port(
         clk: in std_logic;
         reset: in std_logic;
-        enable: in std_logic;
-        q: out std_logic_vector(2 downto 0)
+        q: out std_logic_vector(3 downto 0)
     );
 end component generador_microsec;
 
@@ -158,14 +157,14 @@ signal cod_op : std_logic_vector(7 downto 0) := "00000000";
 signal cod_argu : std_logic_vector(15 downto 0);
 signal cod_argu_L : std_logic_vector(15 downto 0);
 signal cod_argu_H : std_logic_vector(7 downto 0);
-signal pointer : integer range 0 to 65536;
+signal pointer : integer range 0 to 65535;
 signal in_reg_direc : std_logic_vector(15 downto 0);
 signal out_reg_direc : std_logic_vector(15 downto 0);
 signal out_interfaz_A : std_logic_vector(7 downto 0);
 
 signal descod_signals : std_logic_vector(30 downto 0);
 
-signal microsec : std_logic_vector(2 downto 0);
+signal microsec : std_logic_vector(3 downto 0);
 signal control_signals : std_logic_vector(12 downto 0);
 
 begin
@@ -222,7 +221,7 @@ ACUMULADOR_C_0 : AcumuladorEN port map(
 INTERFAZ_A_0 : interfazTxZ port map(
     inInterfaz => out_alu,
     outInterfaz => out_interfaz_A,
-    enPass => control_signals(7)  --CONTROL
+    enPass => control_signals(2)  --CONTROL
 );
 -------------- Conexiones para la unidad de direccionamiento -----------------------
 -------------------------------------------------------------------------------
@@ -230,30 +229,30 @@ INTERFAZ_A_0 : interfazTxZ port map(
     REG_INSTRUCCIONES_0 : registro port map(
         in_0 => data_bus,
         clock => clk,
-		control => control_signals(10), ---CONTROL
+		control => control_signals(12), ---CONTROL
         Q => cod_op
     );
 -- Conxiones para el registro de argumento
     REG_ARGUMENTO_L : registro port map(
         in_0 => data_bus,
         clock => clk,
-        control => control_signals(9), ---CONTROL
+        control => control_signals(10), ---CONTROL
         Q => cod_argu(7 downto 0)
     );
 
     REG_ARGUMENTO_H : registro port map(
         in_0 => data_bus,
         clock => clk,
-        control => control_signals(8), ---CONTROL
+        control => control_signals(11), ---CONTROL
         Q => cod_argu(15 downto 8)
     );
 	 
 -- Conexiones del puntero de instrucciones
     PUNTERO_INSTRUCCIONES_0 : puntero port map(
         dat => pi_in,
-        I_D => control_signals(8), ---CONTROL
-        load => control_signals(7), ---CONTROL
-        enable => control_signals(6), ---CONTROL
+        I_D => control_signals(9), ---CONTROL
+        load => control_signals(8), ---CONTROL
+        enable => control_signals(7), ---CONTROL
         clock => clk,
         pointer => pointer
     );
@@ -262,7 +261,7 @@ INTERFAZ_A_0 : interfazTxZ port map(
     MUX_1 : mux16b2a1 port map(
         in_0 => pointer,
         in_1 => cod_argu,
-        s => control_signals(5), ---CONTROL
+        s => control_signals(6), ---CONTROL
         y => in_reg_direc
     );
     
@@ -270,12 +269,12 @@ INTERFAZ_A_0 : interfazTxZ port map(
     REG_DIRECCIONES_0 : reg_direc port map(
         in_0 => in_reg_direc,
         clock => clk,
-        control => control_signals(4), ---CONTROL
+        control => control_signals(5), ---CONTROL
         Q => out_reg_direc
     );
 -- -- Conexiones para la memoria
     MEMORIA_0 : memoria port map(
-		control => control_signals(3), ---CONTROL
+		control => control_signals(4), ---CONTROL
         clock => clk,
         s_22 => descod_signals(20), ---DESCODIFICADOR
         address => to_integer(unsigned(out_reg_direc)),
@@ -320,8 +319,7 @@ LCT_BANDERAS_0 : LCT_banderas port map(
 -- Generador de la microsecuencia
     GEN_MICROSEC_0 : generador_microsec port map(
         clk => clk,
-        reset => control_signals(1), ---CONTROL
-        enable => control_signals(0), ---CONTROL
+        reset => control_signals(0), ---CONTROL
         q => microsec
     );
 RI <= cod_op;
