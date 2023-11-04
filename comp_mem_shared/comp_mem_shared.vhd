@@ -181,8 +181,8 @@ ALU_1 : ALU_mux port map(
     in_b_2 => A,
     in_b_3 => B,
     in_b_4 => C,
-    sel_a => descod_signals(1 downto 0),  --DESCODIFICADOR
-    sel_b => descod_signals(3 downto 1),  --DESCODIFICADOR
+    sel_a => descod_signals(24 downto 23),  --DESCODIFICADOR
+    sel_b => descod_signals(27 downto 25),  --DESCODIFICADOR
     sel_alu => descod_signals(11 downto 0),  --DESCODIFICADOR
     c_in => out_flags_alu(0),
     alu_out => out_alu,
@@ -198,7 +198,7 @@ ACUMULADOR_A_0 : AcumuladorEN port map(
     inAc => out_alu,
     outAc => A,
     enAc => control_signals(1),  
-	 ctrlAc => descod_signals(10),	--DESCODIFICADOR
+	 ctrlAc => descod_signals(28),	--DESCODIFICADOR
     clk => clk
 );
 
@@ -206,7 +206,7 @@ ACUMULADOR_B_0 : AcumuladorEN port map(
     inAc => out_alu,
     outAc => B,
     enAc => control_signals(1),
-	 ctrlAc => descod_signals(9),	--DESCODIFICADOR
+	 ctrlAc => descod_signals(29),	--DESCODIFICADOR
     clk => clk
 );
 
@@ -214,7 +214,7 @@ ACUMULADOR_C_0 : AcumuladorEN port map(
     inAc => out_alu,
     outAc => C,
     enAc => control_signals(1),
-	 ctrlAc => descod_signals(8),	--DESCODIFICADOR
+	 ctrlAc => descod_signals(30),	--DESCODIFICADOR
     clk => clk
 );
 
@@ -276,7 +276,7 @@ INTERFAZ_A_0 : interfazTxZ port map(
     MEMORIA_0 : memoria port map(
 		control => control_signals(4), ---CONTROL
         clock => clk,
-        s_22 => descod_signals(20), ---DESCODIFICADOR
+        s_22 => descod_signals(8), ---DESCODIFICADOR
         address => to_integer(unsigned(out_reg_direc)),
         data_in => out_alu,
         data_out => data_bus

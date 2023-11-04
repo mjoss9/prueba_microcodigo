@@ -15,7 +15,7 @@ begin
 	process(enAC,clk,inAc,ctrlAc)
 	begin
 	if(enAc = '1') then
-		if(clk'event and clk = '1') then
+		if(clk'event and clk = '0') then
 			if(ctrlAc = '1') then
 				outAc <= inAc;
 			end if;
