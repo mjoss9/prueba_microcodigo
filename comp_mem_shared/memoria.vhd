@@ -28,13 +28,12 @@ architecture rtl of memoria is
 		7 => x"71", -- lda A, mem
 		8 => x"00", -- arg
 		9 => x"04", -- arg
-		10 => x"43", -- inc A
-		11 => x"72", -- sta A, mem
-		12 => x"00", -- arg
-		13 => x"05", -- arg
-		14 => x"71", -- lda A, mem
-		15 => x"00", -- arg
-		16 => x"05", -- arg
+		10 => x"73", -- inc mem
+		11 => x"00", -- arg
+		12 => x"04", -- arg
+		13 => x"71", -- lda A, mem
+		14 => x"00", -- arg
+		15 => x"04", -- arg
 
         -- Finalizando a memoria com zeros
         others => "00000000"

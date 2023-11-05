@@ -17,10 +17,10 @@ entity comp_mem_shared is
         signal_control : out std_LOGIC_VECTOR(12 downto 0);
         cod_ope : out std_LOGIC_VECTOR(7 downto 0);
         data_buss : out std_logic_vector(7 downto 0);
-        addr_mem_micro : out std_logic_vector(11 downto 0);
+        addr_mem_micro : out std_logic_vector(6 downto 0);
         rd : out std_logic_vector(15 downto 0);
         RA : out std_logic_vector(15 downto 0);
-        descod1 : out std_logic_vector(30 downto 0)
+        descod1 : out std_logic_vector(33 downto 0)
     );
 end comp_mem_shared;
 
@@ -81,7 +81,7 @@ end component registro;
 component descodUSCE is
     port(
         in_s: in std_logic_vector(7 downto 0);
-        out_s: out std_logic_vector(30 downto 0)
+        out_s: out std_logic_vector(33 downto 0)
     );
 end component descodUSCE;
 
@@ -134,7 +134,7 @@ end component LCT_banderas;
 component mem_micro_cod is
     port (
         clk : in std_logic;
-        addr : in std_logic_vector(11 downto 0);
+        addr : in std_logic_vector(6 downto 0);
         data : out std_logic_vector(12 downto 0)
     );
 end component mem_micro_cod;
@@ -162,7 +162,7 @@ signal in_reg_direc : std_logic_vector(15 downto 0);
 signal out_reg_direc : std_logic_vector(15 downto 0);
 signal out_interfaz_A : std_logic_vector(7 downto 0);
 
-signal descod_signals : std_logic_vector(30 downto 0);
+signal descod_signals : std_logic_vector(33 downto 0);
 
 signal microsec : std_logic_vector(3 downto 0);
 signal control_signals : std_logic_vector(12 downto 0);
@@ -312,7 +312,7 @@ LCT_BANDERAS_0 : LCT_banderas port map(
 -- Memoria para almacenar el microcodigo
     MEM_MICRO_COD_0 : mem_micro_cod port map(
         clk => clk,
-        addr => cod_op&microsec,
+        addr => descod_signals(33 downto 31)&microsec,
         data => control_signals
     );
 
@@ -328,7 +328,7 @@ Micro_secuencia <= microsec;
 signal_control <= control_signals;
 cod_ope <= cod_op;
 data_buss <= data_bus;
-addr_mem_micro <= cod_op&microsec;
+addr_mem_micro <= descod_signals(33 downto 31)&microsec;
 rd <= out_reg_direc;
 RA <= cod_argu;
 descod1 <= descod_signals;
