@@ -276,7 +276,7 @@ INTERFAZ_A_0 : interfazTxZ port map(
     MEMORIA_0 : memoria port map(
 		control => control_signals(4), ---CONTROL
         clock => clk,
-        s_22 => descod_signals(8), ---DESCODIFICADOR
+        s_22 => descod_signals(22), ---DESCODIFICADOR
         address => to_integer(unsigned(out_reg_direc)),
         data_in => out_alu,
         data_out => data_bus

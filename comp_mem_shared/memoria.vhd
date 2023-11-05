@@ -25,15 +25,17 @@ architecture rtl of memoria is
         3 => "00000000",
         4 => "00001001",
 
-		7 => "01110001", -- lda A
-		8 => "00000000", -- arg
-		9 => "00000100", -- arg
-		10 => "01110011", -- inc mem
-		11 => "00000000", -- arg
-		12 => "00000100", -- arg
+		7 => x"71", -- lda A, mem
+		8 => x"00", -- arg
+		9 => x"04", -- arg
+		10 => x"43", -- inc A
+		11 => x"72", -- sta A, mem
+		12 => x"00", -- arg
+		13 => x"05", -- arg
+		14 => x"71", -- lda A, mem
+		15 => x"00", -- arg
+		16 => x"05", -- arg
 
-		16 => "00001100", -- lda acc
-		17 => "00000101", -- arg
         -- Finalizando a memoria com zeros
         others => "00000000"
     );
