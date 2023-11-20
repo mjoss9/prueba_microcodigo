@@ -21,7 +21,7 @@ begin
 				PPH when "0100",
 				PPL when "0101",
 				PIH when "0110",
-				PIL when "0111";
+				PIL when "0111",
 				resALU when "1000";
 				 
 	process(s22)
