@@ -5,10 +5,10 @@ use IEEE.std_logic_1164.all;
 
 entity reg_direc is
     port (
-        in_0 : in std_logic_vector (15 downto 0); --Entrada
+        in_0 : in integer range 0 to 65535; --Entrada
         clock : in std_logic;         --Entrada clock
         control : in std_logic;
-		  Q : out std_logic_vector (15 downto 0));--Salida
+		  Q : out integer range 0 to 65535);--Salida
 end entity;
 --Arquitectura del Acumulador
 architecture arch of reg_direc is

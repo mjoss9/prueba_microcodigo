@@ -22,7 +22,7 @@ PI_bloque: Puntero port map (Dat_PI,ID_ctrl,load_PI,load2_PI,EN,clock,PI_out);
 load_PI <= LR or load_Hab;
 EN <= EN_ctrl or EN_descod;
 load2_PI <= not MUX_ctrl;
-process(MUX_ctrl,Dat_PI)
+process(MUX_ctrl,Dat_PI, RDat_in)
 begin
 	if(MUX_ctrl = '1') then
 		Dat_PI <= RDat_in;

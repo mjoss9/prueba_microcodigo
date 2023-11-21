@@ -11,7 +11,7 @@ entity rdat is
         ctrl_dataH : in std_logic;
         ctrl_dataL : in std_logic;
         I : in std_logic; -- Incremento
-		Q: out std_logic_vector (15 downto 0));--Salida
+		Q: out integer range 0 to 65535 := 0);--Salida
 end entity;
 --Arquitectura del Registro de datos
 architecture arch of rdat is
@@ -32,5 +32,5 @@ begin
         end if;
     end process;
     -- Salida del registro auxiliar
-    Q <= dato_aux;
+    Q <= to_integer(unsigned(dato_aux));
 end arch;

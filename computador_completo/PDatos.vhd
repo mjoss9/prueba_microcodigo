@@ -26,7 +26,7 @@ begin
 	Puntero_IX: Puntero port map (RDat,s(57),s(58),s(54),clock,pointer_IX);
 	Puntero_IY: Puntero port map (RDat,s(57),s(58),s(55),clock,pointer_IY);
 	Puntero_PP: Puntero port map (RDat,s(57),s(58),s(56),clock,pointer_PP);
-	process(s(59),PDat_EN)
+	process(s(59),PDat_EN, pointer_IX, pointer_IY, pointer_PP, RDatD)
 	begin
 	if(PDat_EN = '1') then
 		IX <= pointer_IX;

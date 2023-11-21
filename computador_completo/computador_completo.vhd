@@ -2,7 +2,7 @@ library ieee;
 USE ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity comp_mem_shared is
+entity computador_completo is
     port (
         clk : in std_logic;
         pi_in : in integer range 0 to 65535;
@@ -12,19 +12,19 @@ entity comp_mem_shared is
         C : inout std_logic_vector(7 downto 0);
         flags : buffer std_logic_vector(5 downto 0);
         RI : out std_LOGIC_VECTOR(7 downto 0);
+        RI2 : out std_LOGIC_VECTOR(7 downto 0);
         PI : out integer range 0 to 65535;
         Micro_secuencia : out std_logic_vector(3 downto 0);
-        signal_control : out std_LOGIC_VECTOR(12 downto 0);
+        signal_control : out std_LOGIC_VECTOR(26 downto 0);
         cod_ope : out std_LOGIC_VECTOR(7 downto 0);
         data_buss : out std_logic_vector(7 downto 0);
-        addr_mem_micro : out std_logic_vector(6 downto 0);
-        rd : out std_logic_vector(15 downto 0);
-        RA : out std_logic_vector(15 downto 0);
-        descod1 : out std_logic_vector(33 downto 0)
+        addr_mem_micro : out std_logic_vector(7 downto 0);
+        rd : out integer range 0 to 65535;
+        descod1 : out std_logic_vector(66 downto 0)
     );
-end comp_mem_shared;
+end computador_completo;
 
-architecture rtl of comp_mem_shared is
+architecture rtl of computador_completo is
 ------------------ COMPONENTES PARA LA UNIDAD DE EJECUCION ----------------
 -- ALU
 component ALU_mux is
@@ -78,7 +78,7 @@ component rdat is
         ctrl_dataH : in std_logic;
         ctrl_dataL : in std_logic;
         I : in std_logic; -- Incremento
-		Q: out std_logic_vector (15 downto 0));--Salida
+		Q: out integer range 0 to 65535 := 0);--Salida
 end component rdat;
 
 -- Puntero de instrucciones
@@ -101,29 +101,33 @@ end component PDatos;
 
 -- Mux de 4 a 1 de 16 bits
 component mux16b4a1 is
-    port(in_0, in_1, in_2, in_3			:	IN STD_LOGIC_VECTOR (15 DOWNTO 0);--Entradas del multiplexor
-        s				:	in std_logic_vector(1 downto 0);
-        y				:	OUT STD_LOGIC_VECTOR (15 DOWNTO 0));--Salida del multiplexor
+    port(	in_0			:	IN integer range 0 to 65535;--Entradas del multiplexor
+		in_1			:	IN integer range 0 to 65535;--Entradas del multiplexor
+		in_2			:	IN integer range 0 to 65535;--Entradas del multiplexor
+		in_3			:	IN integer range 0 to 65535;--Entradas del multiplexor
+		s				:	in std_logic_vector(1 downto 0);
+		y				:	OUT integer range 0 to 65535);--Salida del multiplexor
 end component mux16b4a1;
 
 -- Registro de direcciones
 component reg_direc is
     port (
-        in_0 : in std_logic_vector (15 downto 0); --Entrada
+        in_0 : in integer range 0 to 65535; --Entrada
         clock : in std_logic;         --Entrada clock
         control : in std_logic;
-		  Q : out std_logic_vector (15 downto 0));--Salida
+		  Q : out integer range 0 to 65535);--Salida
 end component reg_direc;
 
 -- Interaz de Memoria
-component interfazMem is
-    port( IXH,IXL,IYH,IYL,PPH,PPL, PIH, PIL, resALU: in std_logic_vector(7 downto 0);
-        s22: in std_logic;
-        s: in std_logic_vector(3 downto 0);		
-        ALU_MEM: out std_logic_vector(7 downto 0);
-        DatoMEM: inout std_logic_vector(7 downto 0)
-    );
-end component interfazMem;
+component InterfazMemo is
+    port( IX,IY,PP, PI: in integer range 0 to 65535;
+		resALU: in std_logic_vector(7 downto 0);
+		s22: in std_logic;
+		s: in std_logic_vector(3 downto 0);		
+		ALU_MEM: out std_logic_vector(7 downto 0)
+		-- DatoMEM: inout std_logic_vector(7 downto 0)
+);
+end component InterfazMemo;
 
 -- Memoria compartida
 component memoria is
@@ -172,17 +176,17 @@ end component descodCC;
 
 -- Mux de 4 bits 2 a 1
 component mux4b2a1 is
-    port(in_0, in_1			:	IN STD_LOGIC_VECTOR (3 DOWNTO 0);--Entradas del multiplexor
-        s				:	in std_logic_vector(1 downto 0);
-        y				:	OUT STD_LOGIC_VECTOR (3 DOWNTO 0));--Salida del multiplexor
+    port(in_0,in_1 :	in std_logic_vector(3 downto 0);
+		s :	in std_logic;
+		y :	out std_logic_vector(3 downto 0));
 end component mux4b2a1;
 
 -- Memoria de microcodigo
 component mem_micro_cod is
     port (
         clk : in std_logic;
-        addr : in std_logic_vector(6 downto 0);
-        data : out std_logic_vector(12 downto 0)
+        addr : in std_logic_vector(7 downto 0);
+        data : out std_logic_vector(26 downto 0)
     );
 end component mem_micro_cod;
 
@@ -198,26 +202,29 @@ end component generador_microsec;
 ------------------ Signal internas
 ------------------------------------------------
 signal data_bus : std_logic_vector(7 downto 0);
+signal out_interfaz_mem : std_logic_vector(7 downto 0);
 signal out_alu : std_logic_vector(7 downto 0);
 signal out_flags_alu : std_logic_vector(5 downto 0);
+signal out_flags_LCT : std_logic_vector(5 downto 0);
+signal reg_flags_out : std_logic_vector(5 downto 0);
 signal cod_op : std_logic_vector(7 downto 0) := "00000000";
 signal cod_op2 : std_logic_vector(7 downto 0) := "00000000";
-signal cod_ope : std_logic_vector(7 downto 0) := "00000000";
+signal cod_operacion : std_logic_vector(7 downto 0) := "00000000";
 signal desplazamiento : std_logic_vector(7 downto 0) := "00000000";
-signal out_reg_dat : std_logic_vector(15 downto 0);
+signal out_reg_dat : integer range 0 to 65535;
 signal out_lr : std_logic;
 signal pointer : integer range 0 to 65535;
 signal IX_out : integer range 0 to 65535;
 signal IY_out : integer range 0 to 65535;
 signal PP_out : integer range 0 to 65535;
 signal PDat_out : integer range 0 to 65535;
-signal mux_reg_direc : std_logic_vector(15 downto 0);
-signal reg_direc : std_logic_vector(15 downto 0);
+signal mux_reg_direc : integer range 0 to 65535;
+signal reg_direcciones : integer range 0 to 65535;
 
-signal descod_signals : std_logic_vector(33 downto 0);
+signal descod_signals : std_logic_vector(66 downto 0);
 signal out_mux_micro : std_logic_vector(3 downto 0);
 signal microsec : std_logic_vector(3 downto 0);
-signal control_signals : std_logic_vector(12 downto 0);
+signal control_signals : std_logic_vector(26 downto 0);
 
 begin
 ----------------- Conexiones UNIDAD DE EJECUCION ---------------------
@@ -270,25 +277,25 @@ AcumuladorC : AcumuladorEN port map(
 );
 -- Registro de banderas
 Reg_banderas : reg_flags port map(
-    C_in => out_flags_alu(0),
-    V_in => out_flags_alu(1),
-    H_in => out_flags_alu(2),
-    N_in => out_flags_alu(3),
-    Z_in => out_flags_alu(4),
-    P_in => out_flags_alu(5),
-    s => descod_signals(33 downto 27),  --DESCODIFICADOR
+    C_in => out_flags_LCT(0),
+    V_in => out_flags_LCT(1),
+    H_in => out_flags_LCT(2),
+    N_in => out_flags_LCT(3),
+    Z_in => out_flags_LCT(4),
+    P_in => out_flags_LCT(5),
+    s => descod_signals(34 downto 27),  --DESCODIFICADOR
     ctrl_C => descod_signals(2),  --DESCODIFICADOR
     ctrl_V => descod_signals(3),  --DESCODIFICADOR
     ctrl_H => descod_signals(4),  --DESCODIFICADOR
     ctrl_N => descod_signals(5),  --DESCODIFICADOR
     ctrl_Z => descod_signals(6),  --DESCODIFICADOR
     ctrl_P => descod_signals(7),  --DESCODIFICADOR
-    C_out => flags(0),
-    V_out => flags(1),
-    H_out => flags(2),
-    N_out => flags(3),
-    Z_out => flags(4),
-    P_out => flags(5)
+    C_out => reg_flags_out(0),
+    V_out => reg_flags_out(1),
+    H_out => reg_flags_out(2),
+    N_out => reg_flags_out(3),
+    Z_out => reg_flags_out(4),
+    P_out => reg_flags_out(5)
 );
 ----------------- Conexiones UNIDAD DE DIRECCIONAMIENTO ---------------------
 -------------------------------------------------------------------------------
@@ -339,8 +346,8 @@ PunteroI1 : PunteroI port map(
 -- Puntero de datos
 PunteroD : PDatos port map(
     RDat => out_reg_dat,
-    RDatD => desplazamiento,
-    s => descod_signals(55 downto 62), --DESCODIFICADOR
+    RDatD => to_integer(unsigned(desplazamiento)),
+    s => descod_signals(60 downto 55), --DESCODIFICADOR
     PDat_EN => control_signals(18), --CONTROL
     clock => clk,
     IX => IX_out,
@@ -349,105 +356,112 @@ PunteroD : PDatos port map(
     PDat => PDat_out
 );
 -- Mux de 4 a 1 de 16 bits
-Mux16b4a1 : mux16b4a1 port map(
-    in_0 => PI_out,
-    in_1 => RDat_out,
+Mux16b4a1_0 : mux16b4a1 port map(
+    in_0 => pointer,
+    in_1 => out_reg_dat,
     in_2 => PDat_out,
     in_3 => PP_out,
     s => control_signals(26 downto 25), --DESCODIFICADOR
     y => mux_reg_direc
 );
 -- Registro de direcciones
-Reg_direc : reg_direc port map(
+Reg_direc_0 : reg_direc port map(
     in_0 => mux_reg_direc,
     clock => clk,
     control => control_signals(24), --CONTROL
-    Q => reg_direc
+    Q => reg_direcciones
 );
 -- Interfaz de memoria
-InterfazMem : interfazMem port map(
-    IXH => IX_out(15 downto 8),
-    IXL => IX_out(7 downto 0),
-    IYH => IY_out(15 downto 8),
-    IYL => IY_out(7 downto 0),
-    PPH => PP_out(15 downto 8),
-    PPL => PP_out(7 downto 0),
-    PIH => pointer(15 downto 8),
-    PIL => pointer(7 downto 0),
+InterfazMem_0 : InterfazMemo port map(
+    IX => IX_out,
+    IY => IY_out,
+    PP => PP_out,
+    PI => pointer,
     resALU => out_alu,
     s22 => control_signals(22), --CONTROL
-    s => control_signals(63 downto 65), --DESCODIFICADOR
-    ALU_MEM => data_bus,
-    DatoMEM => data_bus
+    s => descod_signals(66 downto 63), --DESCODIFICADOR
+    ALU_MEM => out_interfaz_mem
+    -- DatoMEM => out_mem
 );
 -- Conexiones para la memoria
 MEMORIA_0 : memoria port map(
     control => control_signals(4), ---CONTROL
     clock => clk,
     s_22 => descod_signals(22), ---DESCODIFICADOR
-    address => to_integer(unsigned(out_reg_direc)),
-    data_in => out_alu,
+    address => reg_direcciones,
+    data_in => out_interfaz_mem,
     data_out => data_bus
 );
 ----------------- Conexiones UNIDAD DE CONTROL ---------------------
 -------------------------------------------------------------------------------
 -- LCT para banderas
-LCT_banderas : LCT_banderas port map(
-    N_in => flags(3),
-    Z_in => flags(4),
-    P_in => flags(5),
-    H_in => flags(2),
-    C_in => flags(0),
-    V_in => flags(1),
-    s => descod_signals(33 downto 27), --DESCODIFICADOR
+LCT_banderas_0 : LCT_banderas port map(
+    N_in => out_flags_alu(3),
+    Z_in => out_flags_alu(4),
+    P_in => out_flags_alu(5),
+    H_in => out_flags_alu(2),
+    C_in => out_flags_alu(0),
+    V_in => out_flags_alu(1),
+    s => descod_signals(34 downto 27), --DESCODIFICADOR
     clock => clk,
-    N_out => out_flags_alu(3),
-    Z_out => out_flags_alu(4),
-    P_out => out_flags_alu(5),
-    H_out => out_flags_alu(2),
-    C_out => out_flags_alu(0),
-    V_out => out_flags_alu(1)
+    N_out => out_flags_LCT(3),
+    Z_out => out_flags_LCT(4),
+    P_out => out_flags_LCT(5),
+    H_out => out_flags_LCT(2),
+    C_out => out_flags_LCT(0),
+    V_out => out_flags_LCT(1)
 );
 --Logica de Ramificacion LR
 Logica_Ramificacion : LR port map(
-    C => flags(0),
-    V => flags(1),
-    N => flags(3),
-    Z => flags(4),
-    s => descod_signals(35 downto 53), --DESCODIFICADOR
+    C => reg_flags_out(0),
+    V => reg_flags_out(1),
+    N => reg_flags_out(3),
+    Z => reg_flags_out(4),
+    s => descod_signals(53 downto 35), --DESCODIFICADOR
     h_c => out_lr
 );
 -- Mux de 2 a 1 con salida de 8 bits
-Mux8b2a1 : mux8b2a1 port map(
+Mux8b2a1_0 : mux8b2a1 port map(
     in_0 => cod_op,
     in_1 => cod_op2,
     s => control_signals(25), --DESCODIFICADOR
-    y => cod_ope
+    y => cod_operacion
 );
 -- Decodificador de instrucciones
-DescodCC : descodCC port map(
-    in_s => cod_ope,
+DescodCC_0 : descodCC port map(
+    in_s => cod_operacion,
     ctrl_index => control_signals(25), --CONTROL
     out_s => descod_signals
 );
 -- Mux de 4 bits 2 a 1
-Mux4b2a1 : mux4b2a1 port map(
-    in_0 => descod_signals(31 downto 34), --DESCODIFICADOR
+Mux4b2a1_0 : mux4b2a1 port map(
+    in_0 => descod_signals(34 downto 31), --DESCODIFICADOR
     in_1 => "0100", --DESCODIFICADOR
-    s => cod_op(7), --Registro de Instrucciones
+    s => not(not cod_op(7) and cod_op(6) and cod_op(5) and cod_op(4) and cod_op(3) and cod_op(2) and cod_op(1) and cod_op(0)), --Registro de Instrucciones
     y => out_mux_micro
 );
 -- Memoria de microcodigo
-Mem_micro_cod : mem_micro_cod port map(
+Mem_micro_cod_0 : mem_micro_cod port map(
     clk => clk,
-    addr => out_mux_micro,
+    addr => out_mux_micro&microsec,
     data => control_signals
 );
 -- Generador de microsecuencia
-Generador_microsec : generador_microsec port map(
+Generador_microsec_0 : generador_microsec port map(
     clk => clk,
     reset => control_signals(0), --CONTROL
     q => microsec
 );
+
+RI <= cod_op;
+RI2 <= cod_op2;
+PI <= pointer;
+Micro_secuencia <= microsec;
+signal_control <= control_signals;
+cod_ope <= cod_operacion;
+data_buss <= data_bus;
+addr_mem_micro <= out_mux_micro&microsec;
+rd <= reg_direcciones;
+descod1 <= descod_signals;
 end rtl;
 
