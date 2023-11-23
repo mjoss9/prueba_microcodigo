@@ -7,6 +7,7 @@ entity generador_microsec is
     port(
         clk: in std_logic;
         reset: in std_logic;
+        enable: in std_logic;
         q: out std_logic_vector(3 downto 0)
     );
 end entity generador_microsec;
@@ -16,10 +17,12 @@ architecture rtl of generador_microsec is
 begin
     process(clk, reset)
     begin
-        if reset = '1' then
-            q_int <= (others => '0');
-        elsif falling_edge(clk) then
-            q_int <= q_int + 1;
+        if enable = '1' then
+            if reset = '1' then
+                q_int <= (others => '0');
+            elsif falling_edge(clk) then
+                q_int <= q_int + 1;
+            end if;
         end if;
     end process;
     q <= std_logic_vector(q_int);

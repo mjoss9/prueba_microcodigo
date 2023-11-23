@@ -195,6 +195,7 @@ component generador_microsec is
     port(
         clk: in std_logic;
         reset: in std_logic;
+        enable : in std_logic;
         q: out std_logic_vector(3 downto 0)
     );
 end component generador_microsec;
@@ -255,7 +256,7 @@ ALU_1 : ALU_mux port map(
 AcumuladorA : AcumuladorEN port map(
     inAc => out_alu,
     outAc => A,
-    enAc => descod_signals(1),  --DESCODIFICADOR
+    enAc => control_signals(15),  --DESCODIFICADOR
     ctrlAc => descod_signals(28),  --DESCODIFICADOR
     clk => clk
 );
@@ -263,7 +264,7 @@ AcumuladorA : AcumuladorEN port map(
 AcumuladorB : AcumuladorEN port map(
     inAc => data_bus,
     outAc => B,
-    enAc => descod_signals(1),  --DESCODIFICADOR
+    enAc => control_signals(15),  --DESCODIFICADOR
     ctrlAc => descod_signals(29),  --DESCODIFICADOR
     clk => clk
 );
@@ -271,7 +272,7 @@ AcumuladorB : AcumuladorEN port map(
 AcumuladorC : AcumuladorEN port map(
     inAc => data_bus,
     outAc => C,
-    enAc => descod_signals(1),  --DESCODIFICADOR
+    enAc => control_signals(15),  --DESCODIFICADOR
     ctrlAc => descod_signals(30),  --DESCODIFICADOR
     clk => clk
 );
@@ -303,21 +304,21 @@ Reg_banderas : reg_flags port map(
 Reg_I : registro port map(
     in_0 => data_bus,
     clock => clk,
-    control => control_signals(12), --CONTROL
+    control => control_signals(0), --CONTROL
     Q => cod_op
 );
 -- Registro de Instruciones 2
 Reg_I2 : registro port map(
     in_0 => data_bus,
     clock => clk,
-    control => control_signals(13), --CONTROL
+    control => control_signals(1), --CONTROL
     Q => cod_op2
 );
 -- Registro de dezplazamiento de datos
 Reg_DatD : registro port map(
     in_0 => data_bus,
     clock => clk,
-    control => control_signals(14), --CONTROL
+    control => control_signals(2), --CONTROL
     Q => desplazamiento
 );
 -- Registro de datos
@@ -325,9 +326,9 @@ Reg_Dat : rdat port map(
     dataH => data_bus,
     dataL => data_bus,
     clock => clk,
-    ctrl_dataH => control_signals(15), --CONTROL
-    ctrl_dataL => control_signals(16), --CONTROL
-    I => control_signals(17), --CONTROL
+    ctrl_dataH => control_signals(3), --CONTROL
+    ctrl_dataL => control_signals(4), --CONTROL
+    I => control_signals(5), --CONTROL
     Q => out_reg_dat
 );
 -- Puntero de instrucciones
@@ -335,11 +336,11 @@ PunteroI1 : PunteroI port map(
     PI_in => pi_in,
     RDat_in => out_reg_dat,
     LR => out_lr, --LOGICA DE RAMIFICACION
-    load_Hab => control_signals(19), --CONTROL
-    ID_ctrl => control_signals(20), --CONTROL
-    EN_ctrl => control_signals(21), --CONTROL
+    load_Hab => control_signals(7), --CONTROL
+    ID_ctrl => control_signals(6), --CONTROL
+    EN_ctrl => control_signals(8), --CONTROL
     EN_descod => descod_signals(22), --CONTROL
-    MUX_ctrl => control_signals(23), --CONTROL
+    MUX_ctrl => control_signals(9), --CONTROL
     clock => clk,
     PI_out => pointer
 );
@@ -348,7 +349,7 @@ PunteroD : PDatos port map(
     RDat => out_reg_dat,
     RDatD => to_integer(unsigned(desplazamiento)),
     s => descod_signals(60 downto 55), --DESCODIFICADOR
-    PDat_EN => control_signals(18), --CONTROL
+    PDat_EN => control_signals(10), --CONTROL
     clock => clk,
     IX => IX_out,
     IY => IY_out,
@@ -361,14 +362,14 @@ Mux16b4a1_0 : mux16b4a1 port map(
     in_1 => out_reg_dat,
     in_2 => PDat_out,
     in_3 => PP_out,
-    s => control_signals(26 downto 25), --DESCODIFICADOR
+    s => control_signals(12 downto 11), --DESCODIFICADOR
     y => mux_reg_direc
 );
 -- Registro de direcciones
 Reg_direc_0 : reg_direc port map(
     in_0 => mux_reg_direc,
     clock => clk,
-    control => control_signals(24), --CONTROL
+    control => control_signals(13), --CONTROL
     Q => reg_direcciones
 );
 -- Interfaz de memoria
@@ -385,7 +386,7 @@ InterfazMem_0 : InterfazMemo port map(
 );
 -- Conexiones para la memoria
 MEMORIA_0 : memoria port map(
-    control => control_signals(4), ---CONTROL
+    control => control_signals(14), ---CONTROL
     clock => clk,
     s_22 => descod_signals(22), ---DESCODIFICADOR
     address => reg_direcciones,
@@ -449,7 +450,8 @@ Mem_micro_cod_0 : mem_micro_cod port map(
 -- Generador de microsecuencia
 Generador_microsec_0 : generador_microsec port map(
     clk => clk,
-    reset => control_signals(0), --CONTROL
+    reset => control_signals(16), --CONTROL
+    enable => control_signals(17), --CONTROL
     q => microsec
 );
 
