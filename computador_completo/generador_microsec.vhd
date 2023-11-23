@@ -19,10 +19,10 @@ begin
     begin
         if enable = '1' then
             if reset = '1' then
-                q_int <= (others => '0');
-            elsif falling_edge(clk) then
-                q_int <= q_int + 1;
-            end if;
+            q_int <= (others => '0');
+        elsif falling_edge(clk) then
+            q_int <= q_int + 1;
+        end if;
         end if;
     end process;
     q <= std_logic_vector(q_int);
