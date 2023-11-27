@@ -171,7 +171,7 @@ component descodCC is
     port(
       in_s: in std_logic_vector(7 downto 0);
       ctrl_index: in std_logic;
-      out_s: out std_logic_vector(66 downto 0)
+      out_s: out std_logic_vector(67 downto 0)
   );
 end component descodCC;
 
@@ -223,7 +223,7 @@ signal PDat_out : integer range 0 to 65535;
 signal mux_reg_direc : integer range 0 to 65535;
 signal reg_direcciones : integer range 0 to 65535;
 
-signal descod_signals : std_logic_vector(66 downto 0);
+signal descod_signals : std_logic_vector(67 downto 0);
 signal out_mux_micro : std_logic_vector(3 downto 0);
 signal microsec : std_logic_vector(3 downto 0);
 signal control_signals : std_logic_vector(18 downto 0);

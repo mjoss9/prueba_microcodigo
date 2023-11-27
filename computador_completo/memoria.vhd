@@ -6,7 +6,7 @@ entity memoria is
 	port(
 		control: in std_logic;
 		clock: in std_logic; --Señal de reloj
-		s_22: in std_logic := '1'; --s_21=1 ESCRITURA,s_21=0 LECTURA
+		s_22: in std_logic := '1'; --s_22=1 ESCRITURA,s_22=0 LECTURA
 		address: in integer range 0 to 65535; --16 direcciones codificadas por 5 bits
 		data_in: in std_logic_vector (7 downto 0); --Ancho de palabra de 8 bits
 		data_out: out std_logic_vector (7 downto 0)); --Salida de datos

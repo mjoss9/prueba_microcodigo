@@ -40,4 +40,5 @@ begin
 	-- 	ALU_MEM <= DatoMEM;
 	-- end if;
 	-- end process;
+	ALU_MEM <= outMUX;
 end arch;

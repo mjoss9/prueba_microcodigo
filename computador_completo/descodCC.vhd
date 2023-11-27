@@ -5,7 +5,7 @@ entity descodCC is
   port(
       in_s: in std_logic_vector(7 downto 0);
       ctrl_index: in std_logic;
-      out_s: out std_logic_vector(66 downto 0)
+      out_s: out std_logic_vector(67 downto 0)
   );
 end descodCC;
 
@@ -42,24 +42,26 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
          case in_s is
            -- Instrucciones Logicas - Aritmeticas
             -- NEG
-           when x"43" => out_s <= usce_out & "001100000000000000000001000000000000"; --IX
-           when x"C3" => out_s <= usce_out & "001100000000000000000001000000000000"; --IY
-           when others => out_s <= usce_out & "000000000000000000000001000000000000";
+           when x"43" => out_s <= usce_out & "0011000000000000000000010000000000000"; --IX
+           when x"C3" => out_s <= usce_out & "0011000000000000000000010000000000000"; --IY
+           when others => out_s <= usce_out & "0000000000000000000000010000000000000";
          end case;
     else
       in_descodUSCE <= in_s;
          case in_s is
            -- Instrucciones Logicas - Aritmeticas
             -- NEG
-           when x"03" => out_s <= usce_out & "001100000000000000000001000000000000";
-           when x"13" => out_s <= usce_out & "001100000000000000000001000000000000";
-           when x"23" => out_s <= usce_out & "001100000000000000000001000000000000";
-           when x"33" => out_s <= usce_out & "001100000000000000000001000000000000";
+           when x"03" => out_s <= usce_out & "0011000000000000000000010000000000000";
+           when x"13" => out_s <= usce_out & "0011000000000000000000010000000000000";
+           when x"23" => out_s <= usce_out & "0011000000000000000000010000000000000";
+           when x"33" => out_s <= usce_out & "0011000000000000000000010000000000000";
+            -- NOT
+           when x"73" => out_s <= "0100000000000100000000000000000000011" & usce_out;
             -- Instrucciones de transferencia de datos
             -- LDA A,MEM
-           when x"71" => out_s <= "000000000000100000000000000000000011" & usce_out;
-            --NOT
-           when others => out_s <= "000000000000100000000001000000000000" & usce_out;
+           when x"71" => out_s <= "0000000000000100000000000000000000011" & usce_out;
+
+           when others => out_s <= "0000000000000100000000001000000000000" & usce_out;
          end case;
     end if;
   end process;
