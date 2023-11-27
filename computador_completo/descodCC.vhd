@@ -44,7 +44,7 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
             -- NEG
            when x"43" => out_s <= usce_out & "001100000000000000000001000000000000"; --IX
            when x"C3" => out_s <= usce_out & "001100000000000000000001000000000000"; --IY
-           when others => out_s <= usce_out & "000000000000000000000000000000000000";
+           when others => out_s <= usce_out & "000000000000000000000001000000000000";
          end case;
     else
       in_descodUSCE <= in_s;
@@ -55,8 +55,11 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
            when x"13" => out_s <= usce_out & "001100000000000000000001000000000000";
            when x"23" => out_s <= usce_out & "001100000000000000000001000000000000";
            when x"33" => out_s <= usce_out & "001100000000000000000001000000000000";
+            -- Instrucciones de transferencia de datos
+            -- LDA A,MEM
+           when x"71" => out_s <= "000000000000100000000000000000000011" & usce_out;
             --NOT
-           when others => out_s <= usce_out & "000000000000000000000000000000000000";
+           when others => out_s <= "000000000000100000000001000000000000" & usce_out;
          end case;
     end if;
   end process;

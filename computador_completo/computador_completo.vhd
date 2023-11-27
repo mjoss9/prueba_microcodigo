@@ -13,6 +13,7 @@ entity computador_completo is
         flags : buffer std_logic_vector(5 downto 0);
         RI : out std_LOGIC_VECTOR(7 downto 0);
         RI2 : out std_LOGIC_VECTOR(7 downto 0);
+        RDat_out : out integer range 0 to 65535;
         PI : out integer range 0 to 65535;
         Micro_secuencia : out std_logic_vector(3 downto 0);
         signal_control : out std_LOGIC_VECTOR(18 downto 0);
@@ -465,5 +466,6 @@ data_buss <= data_bus;
 addr_mem_micro <= out_mux_micro&microsec;
 rd <= reg_direcciones;
 descod1 <= descod_signals;
+RDat_out <= out_reg_dat;
 end rtl;
 
