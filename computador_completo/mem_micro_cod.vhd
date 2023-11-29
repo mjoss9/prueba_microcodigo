@@ -7,12 +7,12 @@ entity mem_micro_cod is
     port (
         clk : in std_logic;
         addr : in std_logic_vector(7 downto 0);
-        data : out std_logic_vector(18 downto 0)
+        data : out std_logic_vector(22 downto 0)
     );
 end mem_micro_cod;
 
 architecture rtl of mem_micro_cod is
-    type mem_type is array (0 to 255) of std_logic_vector(18 downto 0);
+    type mem_type is array (0 to 255) of std_logic_vector(22 downto 0);
     signal mem : mem_type := (
 		0  => "0000000011000000001",  --- Instrucion de comienzo
         1  => "0000000000000010001",

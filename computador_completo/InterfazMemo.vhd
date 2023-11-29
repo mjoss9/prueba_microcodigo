@@ -7,7 +7,8 @@ entity InterfazMemo is
 port( IX,IY,PP, PI: in integer range 0 to 65535;
 		resALU: in std_logic_vector(7 downto 0);
 		s22: in std_logic;
-		s: in std_logic_vector(3 downto 0);		
+		s: in std_logic_vector(3 downto 0);
+		ctrl_s: in std_logic_vector(3 downto 0);
 		ALU_MEM: out std_logic_vector(7 downto 0)
 		-- DatoMEM: inout std_logic_vector(7 downto 0)
 );

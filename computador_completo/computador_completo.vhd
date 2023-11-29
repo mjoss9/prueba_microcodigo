@@ -124,7 +124,8 @@ component InterfazMemo is
     port( IX,IY,PP, PI: in integer range 0 to 65535;
 		resALU: in std_logic_vector(7 downto 0);
 		s22: in std_logic;
-		s: in std_logic_vector(3 downto 0);		
+		s: in std_logic_vector(3 downto 0);
+        ctrl_s: in std_logic_vector(3 downto 0);
 		ALU_MEM: out std_logic_vector(7 downto 0)
 		-- DatoMEM: inout std_logic_vector(7 downto 0)
 );
@@ -187,7 +188,7 @@ component mem_micro_cod is
     port (
         clk : in std_logic;
         addr : in std_logic_vector(7 downto 0);
-        data : out std_logic_vector(18 downto 0)
+        data : out std_logic_vector(22 downto 0)
     );
 end component mem_micro_cod;
 
@@ -226,7 +227,7 @@ signal reg_direcciones : integer range 0 to 65535;
 signal descod_signals : std_logic_vector(67 downto 0);
 signal out_mux_micro : std_logic_vector(3 downto 0);
 signal microsec : std_logic_vector(3 downto 0);
-signal control_signals : std_logic_vector(18 downto 0);
+signal control_signals : std_logic_vector(22 downto 0);
 
 begin
 ----------------- Conexiones UNIDAD DE EJECUCION ---------------------
@@ -305,28 +306,28 @@ Reg_banderas : reg_flags port map(
 Reg_I2 : registro port map(
     in_0 => data_bus,
     clock => clk,
-    control => control_signals(18), --CONTROL
+    control => control_signals(22), --CONTROL
     Q => cod_op2
 );
 -- Registro de Instruciones 1
 Reg_I : registro port map(
     in_0 => data_bus,
     clock => clk,
-    control => control_signals(17), --CONTROL
+    control => control_signals(21), --CONTROL
     Q => cod_op
 );
 -- Mux de 2 a 1 con salida de 8 bits
 Mux8b2a1_0 : mux8b2a1 port map(
     in_0 => cod_op,
     in_1 => cod_op2,
-    s => control_signals(16), --DESCODIFICADOR
+    s => control_signals(20), --CONTROL
     y => cod_operacion
 );
 -- Registro de dezplazamiento de datos
 Reg_DatD : registro port map(
     in_0 => data_bus,
     clock => clk,
-    control => control_signals(15), --CONTROL
+    control => control_signals(19), --CONTROL
     Q => desplazamiento
 );
 -- Registro de datos
@@ -334,9 +335,9 @@ Reg_Dat : rdat port map(
     dataH => data_bus,
     dataL => data_bus,
     clock => clk,
-    ctrl_dataH => control_signals(14), --CONTROL
-    ctrl_dataL => control_signals(13), --CONTROL
-    I => control_signals(12), --CONTROL
+    ctrl_dataH => control_signals(18), --CONTROL
+    ctrl_dataL => control_signals(17), --CONTROL
+    I => control_signals(16), --CONTROL
     Q => out_reg_dat
 );
 -- Puntero de instrucciones
@@ -344,11 +345,11 @@ PunteroI1 : PunteroI port map(
     PI_in => pi_in,
     RDat_in => out_reg_dat,
     LR => out_lr, --LOGICA DE RAMIFICACION
-    load_Hab => control_signals(10), --CONTROL
-    ID_ctrl => control_signals(11), --CONTROL
-    EN_ctrl => control_signals(9), --CONTROL
+    load_Hab => control_signals(14), --CONTROL
+    ID_ctrl => control_signals(15), --CONTROL
+    EN_ctrl => control_signals(13), --CONTROL
     EN_descod => descod_signals(54), --DESCOD
-    MUX_ctrl => control_signals(8), --CONTROL
+    MUX_ctrl => control_signals(12), --CONTROL
     clock => clk,
     PI_out => pointer
 );
@@ -356,8 +357,8 @@ PunteroI1 : PunteroI port map(
 PunteroD : PDatos port map(
     RDat => out_reg_dat,
     RDatD => to_integer(unsigned(desplazamiento)),
-    s => descod_signals(60 downto 55), --DESCODIFICADOR
-    PDat_EN => control_signals(7), --CONTROL
+    s => descod_signals(61 downto 56), --DESCODIFICADOR
+    PDat_EN => control_signals(11), --CONTROL
     clock => clk,
     IX => IX_out,
     IY => IY_out,
@@ -370,14 +371,14 @@ Mux16b4a1_0 : mux16b4a1 port map(
     in_1 => out_reg_dat,
     in_2 => PDat_out,
     in_3 => PP_out,
-    s => control_signals(6 downto 5), --DESCODIFICADOR
+    s => control_signals(10 downto 9), --CONTROL
     y => mux_reg_direc
 );
 -- Registro de direcciones
 Reg_direc_0 : reg_direc port map(
     in_0 => mux_reg_direc,
     clock => clk,
-    control => control_signals(4), --CONTROL
+    control => control_signals(8), --CONTROL
     Q => reg_direcciones
 );
 -- Interfaz de memoria
@@ -389,12 +390,13 @@ InterfazMem_0 : InterfazMemo port map(
     resALU => out_alu,
     s22 => descod_signals(22), --DESCODIFICADOR
     s => descod_signals(66 downto 63), --DESCODIFICADOR
+    ctrl_s => control_signals(6 downto 3), --DESCODIFICADOR
     ALU_MEM => out_interfaz_mem
     -- DatoMEM => out_mem
 );
 -- Conexiones para la memoria
 MEMORIA_0 : memoria port map(
-    control => control_signals(3), ---CONTROL
+    control => control_signals(7), ---CONTROL
     clock => clk,
     s_22 => descod_signals(22), ---DESCODIFICADOR
     address => reg_direcciones,
