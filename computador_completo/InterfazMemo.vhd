@@ -16,13 +16,15 @@ end InterfazMemo;
 architecture arch of InterfazMemo is
 signal outMUX: std_logic_vector(7 downto 0);
 signal IX_vect,IY_vect,PP_vect,PI_vect: std_logic_vector(15 downto 0);
+signal select_signal: std_logic_vector(3 downto 0);
 begin
 	IX_vect <= std_logic_vector(to_unsigned(IX,16));
 	IY_vect <= std_logic_vector(to_unsigned(IY,16));
 	PP_vect <= std_logic_vector(to_unsigned(PP,16));
 	PI_vect <= std_logic_vector(to_unsigned(PI,16));
+	select_signal <= s and ctrl_s;
 
-	with s select
+	with select_signal select
 	outMUX <= 	IX_vect(15 downto 8) when "0000",
 				IX_vect(7 downto 0) when "0001",
 				IY_vect(15 downto 8) when "0010",
