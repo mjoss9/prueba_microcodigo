@@ -198,20 +198,20 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
           when x"64" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- DEC C
           when x"74" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- DEC M
             -- AND A
-          when x"45" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- AND A,N
-          when x"55" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- AND A,B
-          when x"65" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- AND A,C
-          when x"75" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- AND A,M
+          when x"45" => out_s <= "0000000000000100000000000000000000010" & usce_out; -- AND A,N
+          when x"55" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- AND A,B
+          when x"65" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- AND A,C
+          when x"75" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- AND A,M
             -- AND B
-          when x"85" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- AND B,N
-          when x"95" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- AND B,A
-          when x"A5" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- AND B,C
-          when x"B5" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- AND B,M
+          when x"85" => out_s <= "0000000000000100000000000000000000010" & usce_out; -- AND B,N
+          when x"95" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- AND B,A
+          when x"A5" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- AND B,C
+          when x"B5" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- AND B,M
             -- AND C
-          when x"C5" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- AND C,N
-          when x"D5" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- AND C,A
-          when x"E5" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- AND C,B
-          when x"F5" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- AND C,M
+          when x"C5" => out_s <= "0000000000000100000000000000000000010" & usce_out; -- AND C,N
+          when x"D5" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- AND C,A
+          when x"E5" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- AND C,B
+          when x"F5" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- AND C,M
             -- OR A
           when x"46" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- OR A,N
           when x"56" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- OR A,B
@@ -243,20 +243,20 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
           when x"E7" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- XOR C,B
           when x"F7" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- XOR C,M
             -- ADD A
-          when x"48" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADD A,N
-          when x"58" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADD A,B
-          when x"68" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADD A,C
-          when x"78" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADD A,M
+          when x"48" => out_s <= "0000000000000100000000000000000000010" & usce_out; -- ADD A,N
+          when x"58" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- ADD A,B
+          when x"68" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- ADD A,C
+          when x"78" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- ADD A,M
             -- ADD B
-          when x"88" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADD B,N
-          when x"98" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADD B,A
-          when x"A8" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADD B,C
-          when x"B8" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADD B,M
+          when x"88" => out_s <= "0000000000000100000000000000000000010" & usce_out; -- ADD B,N
+          when x"98" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- ADD B,A
+          when x"A8" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- ADD B,C
+          when x"B8" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- ADD B,M
             -- ADD C
-          when x"C8" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADD C,N
-          when x"D8" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADD C,A
-          when x"E8" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADD C,B
-          when x"F8" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADD C,M
+          when x"C8" => out_s <= "0000000000000100000000000000000000010" & usce_out; -- ADD C,N
+          when x"D8" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- ADD C,A
+          when x"E8" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- ADD C,B
+          when x"F8" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- ADD C,M
             -- SUB A
           when x"49" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- SUB A,N
           when x"59" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- SUB A,B
@@ -273,20 +273,20 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
           when x"E9" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- SUB C,B
           when x"F9" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- SUB C,M
             -- ADC A
-          when x"4A" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADC A,N
-          when x"5A" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADC A,B
-          when x"6A" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADC A,C
-          when x"7A" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADC A,M
+          when x"4A" => out_s <= "0000000000000100000000000000000000010" & usce_out; -- ADC A,N
+          when x"5A" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- ADC A,B
+          when x"6A" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- ADC A,C
+          when x"7A" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- ADC A,M
             -- ADC B
-          when x"8A" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADC B,N
-          when x"9A" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADC B,A
-          when x"AA" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADC B,C
-          when x"BA" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADC B,M
+          when x"8A" => out_s <= "0000000000000100000000000000000000010" & usce_out; -- ADC B,N
+          when x"9A" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- ADC B,A
+          when x"AA" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- ADC B,C
+          when x"BA" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- ADC B,M
             -- ADC C
-          when x"CA" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADC C,N
-          when x"DA" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADC C,A
-          when x"EA" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADC C,B
-          when x"FA" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- ADC C,M
+          when x"CA" => out_s <= "0000000000000100000000000000000000010" & usce_out; -- ADC C,N
+          when x"DA" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- ADC C,A
+          when x"EA" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- ADC C,B
+          when x"FA" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- ADC C,M
             -- SBC A
           when x"4B" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- SBC A,N
           when x"5B" => out_s <= "0011000000000000000000010000000000000" & usce_out; -- SBC A,B
