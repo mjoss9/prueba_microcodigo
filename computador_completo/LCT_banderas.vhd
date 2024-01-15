@@ -4,37 +4,25 @@ use ieee.std_logic_1164.all;
 
 entity LCT_banderas is
 port(N_in,Z_in,P_in,H_in,C_in,V_in : in std_logic; --Banderas de entrada
-	  s : in std_logic_vector(7 downto 0); --Palabra de control
-	  clock : in std_logic;	    					--Reloj
-	  N_out,Z_out,P_out,H_out,C_out,V_out : out std_logic);  --Banderas de salida
+	C_cp, N_cp, Z_cp, V_cp : in std_logic; --Banderas de Comparacion de punteros
+	s_12, s_13, s_15, s_16, s_18, s_20 : in std_logic; --Señales de descodificacion
+	N_out,Z_out,P_out,H_out,C_out,V_out : out std_logic);  --Banderas de salida
 end LCT_banderas;
 
-architecture arch of LCT_banderas is	
---Componentes:
---Flip Flop D:
-component ffD is
-	port(in_0,clock:in std_logic;  --entrada de reloj y de datos
-		q : buffer std_logic:='0');  --salida Q
-end component;
-
-signal aux : std_logic_vector(8 downto 0); --variable auxiliar para la salida de la parte combinacional
+architecture arch of LCT_banderas is
+signal aux : std_logic_vector(2 downto 0); --variable auxiliar para la salida de la parte combinacional
 begin
 ---descripcion de la parte combinacional
-aux(8) <= s(7) and clock;
-aux(7) <= s(7) and clock;
-aux(6) <= s(7) and clock;
-aux(5) <= H_in and s(6);
-aux(4) <= s(7) and clock;
-aux(3) <= (C_in and s(0)) or s(1);
-aux(2) <= s(2) and clock;
-aux(1) <= (V_in and s(3)) or s(4);
-aux(0) <= s(5) and clock;
--- descripcion de la parte secuencial
-ffD_1: ffD PORT MAP(N_in,aux(8),N_out);
-ffD_2: ffD PORT MAP(Z_in,aux(7),Z_out);
-ffD_3: ffD PORT MAP(P_in,aux(6),P_out);
-ffD_4: ffD PORT MAP(aux(5),aux(4),H_out);
-ffD_5: ffD PORT MAP(aux(3),aux(2),C_out);
-ffD_6: ffD PORT MAP(aux(1),aux(0),V_out);
+aux(0) <= (C_in and s_12) or s_13;
+aux(1) <= (V_in and s_15) or s_16;
+aux(2) <= H_in and s_18;
+-- descripcion de los Mux con las banderas de comparacion de punteros con la señal de descodificacion 20
+C_out <= (C_cp and s_20) or (aux(0) and not s_20);
+N_out <= (N_cp and s_20) or (N_in and not s_20);
+Z_out <= (Z_cp and s_20) or (Z_in and not s_20);
+V_out <= (V_cp and s_20) or (aux(1) and not s_20);
+
+P_out <= P_in;
+H_out <= aux(2);
 
 end arch;

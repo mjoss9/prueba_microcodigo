@@ -7,8 +7,8 @@ use ieee.std_logic_arith.all;
 
 entity CompPunteros is
     port(
-        IX, IY : in std_logic_vector(15 downto 0);
-        RDat : in std_logic_vector(15 downto 0);
+        IX, IY : in integer range 0 to 65535;
+        RDat : in integer range 0 to 65535;
         S : in std_logic;
         C, N, Z, V : out std_logic
     );
@@ -29,31 +29,35 @@ end component;
     signal Resta : std_logic_vector(15 downto 0);
     signal RDat_neg: std_logic_vector(15 downto 0);
     signal v_0, v_1 : std_logic;
+	signal IX_0, IY_0, R_Dat : std_logic_vector(15 downto 0);
 	 
 begin
-	RDat_neg <= not RDat;
-	process(IX, IY, S)
+	IX_0 <= std_logic_vector( to_unsigned( IX, IX_0'length));
+	IY_0 <= std_logic_vector( to_unsigned( IY, IY_0'length));
+	R_Dat <= std_logic_vector( to_unsigned( RDat, R_Dat'length));
+	RDat_neg <= not R_Dat;
+	process(IX_0, IY_0, S)
 		begin
 			 if (S = '1') then
-				  Mux <= IY;
+				  Mux <= IY_0;
 			 else
-				  Mux <= IX;
+				  Mux <= IX_0;
 			 end if;
 	end process;
 -- Comparador Mux y RDat para modificar las banderas, resta entre Mux y RDat
-	process(Mux, RDat, Resta, RDat_neg, v_0, v_1)
+	process(Mux, R_Dat, Resta, RDat_neg, v_0, v_1)
 		 begin
-            Resta <= Mux - RDat;
+            Resta <= Mux - R_Dat;
             v_0 <= not (Mux(15)) and RDat_neg(15) and Resta(15);
             v_1 <= Mux(15) and not (RDat_neg(15)) and not (Resta(15));
             V <= v_0 or v_1;
             N <= Resta(15);
-				if (Mux > RDat) then
+				if (Mux > R_Dat) then
 					C <= '1';
 				else 
 					C <= '0';
 				end if;
-				if (Mux = RDat) then
+				if (Mux = R_Dat) then
 					Z <= '1';
 				else 
 					Z <= '0';

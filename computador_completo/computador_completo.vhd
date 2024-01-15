@@ -16,12 +16,12 @@ entity computador_completo is
         RDat_out : out integer range 0 to 65535;
         PI : out integer range 0 to 65535;
         Micro_secuencia : out std_logic_vector(3 downto 0);
-        signal_control : out std_LOGIC_VECTOR(18 downto 0);
+        signal_control : out std_LOGIC_VECTOR(22 downto 0);
         cod_ope : out std_LOGIC_VECTOR(7 downto 0);
         data_buss : out std_logic_vector(7 downto 0);
         addr_mem_micro : out std_logic_vector(7 downto 0);
         rd : out integer range 0 to 65535;
-        descod1 : out std_logic_vector(66 downto 0)
+        descod1 : out std_logic_vector(67 downto 0)
     );
 end computador_completo;
 
@@ -53,10 +53,11 @@ end component AcumuladorEN;
 -- Registro de banderas
 component reg_flags is
     port (
-        C_in, V_in, H_in, N_in, Z_in, P_in : in std_logic;
-        s : in std_logic_vector(7 downto 0); --Palabra de control
-        ctrl_C, ctrl_V, ctrl_H, ctrl_N, ctrl_Z, ctrl_P : in std_logic;
-        C_out, V_out, H_out, N_out, Z_out, P_out : buffer std_logic
+        C_in, V_in, H_in, N_in, Z_in, P_in : in std_logic; -- Banderas provenientes del LCT de banderas
+        s_14, s_17, s_19 : in std_logic; -- Signals del descodificador de instrucciones
+        s_ctrl: in std_logic; -- Signals de control del microcodigo
+        clock : in std_logic; -- Reloj
+        flags_out : out std_logic_vector(5 downto 0) -- Salida de las banderas
     );
 end component reg_flags;
 
@@ -155,10 +156,20 @@ end component LR;
 -- LCT para banderas
 component LCT_banderas is
     port(N_in,Z_in,P_in,H_in,C_in,V_in : in std_logic; --Banderas de entrada
-        s : in std_logic_vector(7 downto 0); --Palabra de control
-        clock : in std_logic;	    					--Reloj
+        C_cp, N_cp, Z_cp, V_cp : in std_logic; --Banderas de Comparacion de punteros
+        s_12, s_13, s_15, s_16, s_18, s_20 : in std_logic; --Señales de descodificacion
         N_out,Z_out,P_out,H_out,C_out,V_out : out std_logic);  --Banderas de salida
 end component LCT_banderas;
+
+-- Comparador de punteros
+component CompPunteros is
+    port(
+        IX, IY : in integer range 0 to 65535;
+        RDat : in integer range 0 to 65535;
+        S : in std_logic;
+        C, N, Z, V : out std_logic
+    );
+end component CompPunteros;
 
 -- Mux de 2 a 1 con salida de 8 bits
 component mux8b2a1 is
@@ -208,6 +219,7 @@ signal data_bus : std_logic_vector(7 downto 0);
 signal out_interfaz_mem : std_logic_vector(7 downto 0);
 signal out_alu : std_logic_vector(7 downto 0);
 signal out_flags_alu : std_logic_vector(5 downto 0);
+signal out_flags_CP : std_logic_vector(3 downto 0);
 signal out_flags_LCT : std_logic_vector(5 downto 0);
 signal reg_flags_out : std_logic_vector(5 downto 0);
 signal cod_op : std_logic_vector(7 downto 0) := "00000000";
@@ -286,19 +298,12 @@ Reg_banderas : reg_flags port map(
     N_in => out_flags_LCT(3),
     Z_in => out_flags_LCT(4),
     P_in => out_flags_LCT(5),
-    s => descod_signals(34 downto 27),  --DESCODIFICADOR
-    ctrl_C => descod_signals(2),  --DESCODIFICADOR
-    ctrl_V => descod_signals(3),  --DESCODIFICADOR
-    ctrl_H => descod_signals(4),  --DESCODIFICADOR
-    ctrl_N => descod_signals(5),  --DESCODIFICADOR
-    ctrl_Z => descod_signals(6),  --DESCODIFICADOR
-    ctrl_P => descod_signals(7),  --DESCODIFICADOR
-    C_out => reg_flags_out(0),
-    V_out => reg_flags_out(1),
-    H_out => reg_flags_out(2),
-    N_out => reg_flags_out(3),
-    Z_out => reg_flags_out(4),
-    P_out => reg_flags_out(5)
+    s_14 => descod_signals(14),  --DESCODIFICADOR
+    s_17 => descod_signals(17),  --DESCODIFICADOR
+    s_19 => descod_signals(19),  --DESCODIFICADOR
+    s_ctrl => control_signals(2),  --CONTROL
+    clock => clk,
+    flags_out => reg_flags_out
 );
 ----------------- Conexiones UNIDAD DE DIRECCIONAMIENTO ---------------------
 -------------------------------------------------------------------------------
@@ -413,14 +418,33 @@ LCT_banderas_0 : LCT_banderas port map(
     H_in => out_flags_alu(2),
     C_in => out_flags_alu(0),
     V_in => out_flags_alu(1),
-    s => descod_signals(34 downto 27), --DESCODIFICADOR
-    clock => clk,
+    C_cp => out_flags_CP(0),
+    N_cp => out_flags_CP(1),
+    Z_cp => out_flags_CP(2),
+    V_cp => out_flags_CP(3),
+    s_12 => descod_signals(12), --DESCODIFICADOR
+    s_13 => descod_signals(13), --DESCODIFICADOR
+    s_15 => descod_signals(15), --DESCODIFICADOR
+    s_16 => descod_signals(16), --DESCODIFICADOR
+    s_18 => descod_signals(18), --DESCODIFICADOR
+    s_20 => descod_signals(20), --DESCODIFICADOR
     N_out => out_flags_LCT(3),
     Z_out => out_flags_LCT(4),
     P_out => out_flags_LCT(5),
     H_out => out_flags_LCT(2),
     C_out => out_flags_LCT(0),
     V_out => out_flags_LCT(1)
+);
+-- Comparador de punteros
+CompPunteros_0 : CompPunteros port map(
+    IX => IX_out,
+    IY => IY_out,
+    RDat => out_reg_dat,
+    S => descod_signals(62), --DESCODIFICADOR
+    C => out_flags_CP(0),
+    N => out_flags_CP(1),
+    Z => out_flags_CP(2),
+    V => out_flags_CP(3)
 );
 --Logica de Ramificacion LR
 Logica_Ramificacion : LR port map(
@@ -434,7 +458,7 @@ Logica_Ramificacion : LR port map(
 -- Decodificador de instrucciones
 DescodCC_0 : descodCC port map(
     in_s => cod_operacion,
-    ctrl_index => control_signals(16), --CONTROL
+    ctrl_index => control_signals(20), --CONTROL
     out_s => descod_signals
 );
 -- Mux de 4 bits 2 a 1
@@ -458,6 +482,7 @@ Generador_microsec_0 : generador_microsec port map(
     q => microsec
 );
 
+flags <= reg_flags_out;
 RI <= cod_op;
 RI2 <= cod_op2;
 PI <= pointer;
