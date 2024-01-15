@@ -95,7 +95,7 @@ end component PunteroI;
 component PDatos is
     port(RDat: in integer range 0 to 65535;	--Dato
         RDatD: in integer range 0 to 255;
-        s: in std_logic_vector(59 downto 54);
+        s: in std_logic_vector(60 downto 55);
         PDat_EN: in std_logic;					--Habilitador del Puntero de Datos
         clock: in std_logic;  --Incremento/decremento, cargar, habilitar, clock
         IX,IY,PP,PDat: out integer range 0 to 65535);  --Puntero
@@ -362,7 +362,7 @@ PunteroI1 : PunteroI port map(
 PunteroD : PDatos port map(
     RDat => out_reg_dat,
     RDatD => to_integer(unsigned(desplazamiento)),
-    s => descod_signals(61 downto 56), --DESCODIFICADOR
+    s => descod_signals(60 downto 55), --DESCODIFICADOR
     PDat_EN => control_signals(11), --CONTROL
     clock => clk,
     IX => IX_out,
