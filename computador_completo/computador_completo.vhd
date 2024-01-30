@@ -21,7 +21,11 @@ entity computador_completo is
         data_buss : out std_logic_vector(7 downto 0);
         addr_mem_micro : out std_logic_vector(7 downto 0);
         rd : out integer range 0 to 65535;
-        descod1 : out std_logic_vector(67 downto 0)
+        descod1 : out std_logic_vector(67 downto 0);
+        in_descod_ucod : out std_logic_vector(3 downto 0);
+        IX : out integer range 0 to 65535 := 0;
+        IY : out integer range 0 to 65535 := 0;
+        PP : out integer range 0 to 65535 := 0
     );
 end computador_completo;
 
@@ -157,7 +161,7 @@ end component LR;
 component LCT_banderas is
     port(N_in,Z_in,P_in,H_in,C_in,V_in : in std_logic; --Banderas de entrada
         C_cp, N_cp, Z_cp, V_cp : in std_logic; --Banderas de Comparacion de punteros
-        s_12, s_13, s_15, s_16, s_18, s_20 : in std_logic; --Señales de descodificacion
+        s_12, s_13, s_15, s_16, s_18, s_20 : in std_logic; --Signal de descodificacion
         N_out,Z_out,P_out,H_out,C_out,V_out : out std_logic);  --Banderas de salida
 end component LCT_banderas;
 
@@ -483,6 +487,10 @@ Generador_microsec_0 : generador_microsec port map(
 );
 
 flags <= reg_flags_out;
+IX <= IX_out;
+IY <= IY_out;
+PP <= PP_out;
+
 RI <= cod_op;
 RI2 <= cod_op2;
 PI <= pointer;
@@ -494,5 +502,7 @@ addr_mem_micro <= out_mux_micro&microsec;
 rd <= reg_direcciones;
 descod1 <= descod_signals;
 RDat_out <= out_reg_dat;
+in_descod_ucod <= descod_signals(34 downto 31);
+
 end rtl;
 

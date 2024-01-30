@@ -319,7 +319,7 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
           when x"FC" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- CMP C,M
             -- Instrucciones de control
             -- NOP
-          when x"00" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- NOP
+          when x"00" => out_s <= "0000000000000100000000000000000000000" & usce_out; -- NOP
             -- HALT
           when x"10" => out_s <= "0000000000000000000000000000000000001" & usce_out; -- HALT
             -- CLC
@@ -399,7 +399,7 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
             -- CMP Y
           when x"7F" => out_s <= "0000010000000100000000000000000000010" & usce_out; -- CMP Y,N
             -- INC X
-          when x"83" => out_s <= "0000000001001100000000000000000000001" & usce_out; -- INC X
+          when x"83" => out_s <= "0000000001001100000000000100000000001" & usce_out; -- INC X
             -- INC Y
           when x"93" => out_s <= "0000000001010100000000000000000000001" & usce_out; -- INC Y
             -- INC P

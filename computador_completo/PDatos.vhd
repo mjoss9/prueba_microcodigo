@@ -9,7 +9,7 @@ port(RDat: in integer range 0 to 65535;	--Dato
 		s: in std_logic_vector(60 downto 55);
 		PDat_EN: in std_logic;					--Habilitador del Puntero de Datos
 		clock: in std_logic;  --Incremento/decremento, cargar, habilitar, clock
-		IX,IY,PP,PDat: out integer range 0 to 65535);  --Puntero
+		IX,IY,PP,PDat: out integer range 0 to 65535 :=0);  --Puntero
 end PDatos;
 
 architecture arch of PDatos is
