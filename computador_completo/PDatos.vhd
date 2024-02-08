@@ -23,9 +23,9 @@ architecture arch of PDatos is
 	signal IXD,IYD : integer range 0 to 65535;
 	--signal RdatDH : integer range 0 to 255 := 0;
 begin
-	Puntero_IX: Puntero port map (RDat,s(58),s(59),s(59),s(55),clock,pointer_IX);
-	Puntero_IY: Puntero port map (RDat,s(58),s(59),s(59),s(56),clock,pointer_IY);
-	Puntero_PP: Puntero port map (RDat,s(58),s(59),s(59),s(57),clock,pointer_PP);
+	Puntero_IX: Puntero port map (RDat,s(58),s(59),s(59),s(55) and PDat_EN,clock,pointer_IX);
+	Puntero_IY: Puntero port map (RDat,s(58),s(59),s(59),s(56) and PDat_EN,clock,pointer_IY);
+	Puntero_PP: Puntero port map (RDat,s(58),s(59),s(59),s(57) and PDat_EN,clock,pointer_PP);
 	process(s(60),PDat_EN, pointer_IX, pointer_IY, pointer_PP, RDatD, IXD, IYD)
 	begin
 	if(PDat_EN = '1') then

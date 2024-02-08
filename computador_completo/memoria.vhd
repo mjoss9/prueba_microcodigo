@@ -27,7 +27,7 @@ architecture rtl of memoria is
 
 		7 => x"A0", -- sev
 		8 => x"30", -- clv
-		9 => x"83", -- inc x
+		9 => x"93", -- inc y
 		10 => x"90", -- sec
 		11 => x"10", -- hlt
 
