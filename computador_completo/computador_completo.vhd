@@ -25,7 +25,8 @@ entity computador_completo is
         in_descod_ucod : out std_logic_vector(3 downto 0);
         IX : out integer range 0 to 65535 := 0;
         IY : out integer range 0 to 65535 := 0;
-        PP : out integer range 0 to 65535 := 0
+        PP : out integer range 0 to 65535 := 0;
+        mux_ctrl, load_hab, LR_pi : out std_logic
     );
 end computador_completo;
 
@@ -503,6 +504,9 @@ rd <= reg_direcciones;
 descod1 <= descod_signals;
 RDat_out <= out_reg_dat;
 in_descod_ucod <= descod_signals(34 downto 31);
+mux_ctrl <= descod_signals(58);
+load_hab <= control_signals(14);
+LR_pi <= out_lr;
 
 end rtl;
 

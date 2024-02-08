@@ -15,17 +15,17 @@ end PDatos;
 architecture arch of PDatos is
 --Componente de puntero
 	component Puntero is
-	port(dat: in integer range 0 to 65535;	--Dato
-		I_D,load,enable,clock: in std_logic;  --Incremento/decremento, cargar, habilitar, clock
+		port(dat: in integer range 0 to 65535;	--Dato
+		I_D,load,load2,enable,clock: in std_logic;  --Incremento/decremento, cargar, habilitar, clock
 		pointer: out integer range 0 to 65535);  --Puntero
 	end component;
 	signal pointer_IX,pointer_IY,pointer_PP : integer range 0 to 65535;
 	signal IXD,IYD : integer range 0 to 65535;
 	--signal RdatDH : integer range 0 to 255 := 0;
 begin
-	Puntero_IX: Puntero port map (RDat,s(58),s(59),s(55),clock,pointer_IX);
-	Puntero_IY: Puntero port map (RDat,s(58),s(59),s(56),clock,pointer_IY);
-	Puntero_PP: Puntero port map (RDat,s(58),s(59),s(57),clock,pointer_PP);
+	Puntero_IX: Puntero port map (RDat,s(58),s(59),s(59),s(55),clock,pointer_IX);
+	Puntero_IY: Puntero port map (RDat,s(58),s(59),s(59),s(56),clock,pointer_IY);
+	Puntero_PP: Puntero port map (RDat,s(58),s(59),s(59),s(57),clock,pointer_PP);
 	process(s(60),PDat_EN, pointer_IX, pointer_IY, pointer_PP, RDatD, IXD, IYD)
 	begin
 	if(PDat_EN = '1') then
