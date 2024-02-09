@@ -282,7 +282,7 @@ AcumuladorA : AcumuladorEN port map(
 );
 -- Acumulador B
 AcumuladorB : AcumuladorEN port map(
-    inAc => data_bus,
+    inAc => out_alu,
     outAc => B,
     enAc => control_signals(2),  --CONTROL
     ctrlAc => descod_signals(29),  --DESCODIFICADOR
@@ -290,7 +290,7 @@ AcumuladorB : AcumuladorEN port map(
 );
 -- Acumulador C
 AcumuladorC : AcumuladorEN port map(
-    inAc => data_bus,
+    inAc => out_alu,
     outAc => C,
     enAc => control_signals(2),  --CONTROL
     ctrlAc => descod_signals(30),  --DESCODIFICADOR

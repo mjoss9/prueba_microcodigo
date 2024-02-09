@@ -27,9 +27,12 @@ architecture rtl of memoria is
 
 		7 => x"A0", -- sev
 		8 => x"30", -- clv
-		9 => x"93", -- inc y
-		10 => x"90", -- sec
-		11 => x"10", -- hlt
+		9 => x"c1", -- lda c,0x40
+		10 => x"40", -- 0x40
+		11 => x"c6", -- OR c,0x04
+		12 => x"04", -- 0x30
+		13 => x"90", -- sec
+		14 => x"10", -- hlt
 
         -- Finalizando a memoria com zeros
         others => "00000000"
