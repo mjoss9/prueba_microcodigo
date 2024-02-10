@@ -413,20 +413,20 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
             -- DEC P
           when x"A4" => out_s <= "0000000000100100000000000000000000001" & usce_out; -- DEC P
             -- LDA X
-          when x"8F" => out_s <= "0000000010001100000000000000000000010" & usce_out; -- LDA X,N
-          when x"BF" => out_s <= "0000000010001100000000000000000000011" & usce_out; -- LDA X,M
+          when x"8F" => out_s <= "0000000010001100000000000000000001001" & usce_out; -- LDA X,N
+          when x"BF" => out_s <= "0000000010001100000000000000000001010" & usce_out; -- LDA X,M
             -- LDA Y
-          when x"CF" => out_s <= "0000000010010100000000000000000000010" & usce_out; -- LDA Y,N
-          when x"FF" => out_s <= "0000000010010100000000000000000000011" & usce_out; -- LDA Y,M
+          when x"CF" => out_s <= "0000000010010100000000000000000001001" & usce_out; -- LDA Y,N
+          when x"FF" => out_s <= "0000000010010100000000000000000001010" & usce_out; -- LDA Y,M
             -- LDA P
-          when x"C3" => out_s <= "0000000010100100000000000000000000010" & usce_out; -- LDA P,N
-          when x"F3" => out_s <= "0000000010100100000000000000000000011" & usce_out; -- LDA P,M
+          when x"C3" => out_s <= "0000000010100100000000000000000001001" & usce_out; -- LDA P,N
+          when x"F3" => out_s <= "0000000010100100000000000000000001010" & usce_out; -- LDA P,M
             -- STA X
-          when x"B0" => out_s <= "0000101000000100000000000000000000111" & usce_out; -- STA X,M
+          when x"B0" => out_s <= "0000101000000100000000000000000001000" & usce_out; -- STA X,M
             -- STA Y
-          when x"F0" => out_s <= "0001101000000100000000000000000000111" & usce_out; -- STA Y,M
+          when x"F0" => out_s <= "0001101000000100000000000000000001000" & usce_out; -- STA Y,M
             -- STA P
-          when x"F4" => out_s <= "0010101000000100000000000000000000111" & usce_out; -- STA P,M
+          when x"F4" => out_s <= "0010101000000100000000000000000001000" & usce_out; -- STA P,M
             -- Instrucciones de ramificacion
             -- BRC
           when x"15" => out_s <= "0000000000000100000000000000000011000" & usce_out;

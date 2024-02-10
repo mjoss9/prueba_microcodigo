@@ -85,7 +85,6 @@ component rdat is
         clock : in std_logic;         --Entrada clock
         ctrl_dataH : in std_logic;
         ctrl_dataL : in std_logic;
-        I : in std_logic; -- Incremento
 		Q: out integer range 0 to 65535 := 0);--Salida
 end component rdat;
 
@@ -123,6 +122,7 @@ component reg_direc is
         in_0 : in integer range 0 to 65535; --Entrada
         clock : in std_logic;         --Entrada clock
         control : in std_logic;
+        I : in std_logic; -- Incremento
 		  Q : out integer range 0 to 65535);--Salida
 end component reg_direc;
 
@@ -263,7 +263,7 @@ ALU_1 : ALU_mux port map(
     sel_a => descod_signals(24 downto 23),  --DESCODIFICADOR
     sel_b => descod_signals(27 downto 25),  --DESCODIFICADOR
     sel_alu => descod_signals(11 downto 0),  --DESCODIFICADOR
-    c_in => reg_flags_out(0),
+    c_in => out_flags_alu(0),
     alu_out => out_alu,
     alu_C => out_flags_alu(0),
     alu_V => out_flags_alu(1),
@@ -348,7 +348,6 @@ Reg_Dat : rdat port map(
     clock => clk,
     ctrl_dataH => control_signals(18), --CONTROL
     ctrl_dataL => control_signals(17), --CONTROL
-    I => control_signals(16), --CONTROL
     Q => out_reg_dat
 );
 -- Puntero de instrucciones
@@ -390,6 +389,7 @@ Reg_direc_0 : reg_direc port map(
     in_0 => mux_reg_direc,
     clock => clk,
     control => control_signals(8), --CONTROL
+    I => control_signals(16), --CONTROL
     Q => reg_direcciones
 );
 -- Interfaz de memoria
