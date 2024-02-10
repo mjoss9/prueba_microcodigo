@@ -263,7 +263,7 @@ ALU_1 : ALU_mux port map(
     sel_a => descod_signals(24 downto 23),  --DESCODIFICADOR
     sel_b => descod_signals(27 downto 25),  --DESCODIFICADOR
     sel_alu => descod_signals(11 downto 0),  --DESCODIFICADOR
-    c_in => out_flags_alu(0),
+    c_in => reg_flags_out(0),
     alu_out => out_alu,
     alu_C => out_flags_alu(0),
     alu_V => out_flags_alu(1),

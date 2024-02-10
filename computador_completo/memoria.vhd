@@ -26,12 +26,12 @@ architecture rtl of memoria is
         4 => "00001001",
 
 		7 => x"A0", -- sev
-		8 => x"30", -- clv
-		9 => x"c1", -- lda c,0x40
-		10 => x"40", -- 0x40
-		11 => x"c6", -- OR c,0x04
-		12 => x"04", -- 0x30
-		13 => x"90", -- sec
+		8 => x"90", -- sec
+		9 => x"81", -- lda b,0xfe
+		10 => x"fe", -- 0xfe
+		11 => x"8c", -- cmp b,0x12
+		12 => x"12", -- 0x12
+		13 => x"20", -- clc
 		14 => x"10", -- hlt
 
         -- Finalizando a memoria com zeros

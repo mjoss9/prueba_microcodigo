@@ -23,7 +23,7 @@ begin
 			-- Unidad Basica de calculo UBC
 			C <= c_ubc;
 			H <= h_ubc;
-			V <= ((not a_7 and not b_7 and ubc_out(7)) or (a_7 and b_7 and not ubc_out(7))) and not SR and (a_7 xor b_7) and ubc_out(7) and SR;
+			V <= (((not a_7 and not b_7 and ubc_out(7)) or (a_7 and b_7 and not ubc_out(7))) and not SR) or (((not a_7 and b_7 and ubc_out(7))or(a_7 and not b_7 and not ubc_out(7))) and SR);
 		elsif s(11) = '1' then
 			-- Tambor de desplazamiento TD
 			C <= c_td;
