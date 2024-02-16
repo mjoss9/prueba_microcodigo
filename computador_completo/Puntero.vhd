@@ -17,14 +17,14 @@ begin
 	begin
 	if(enable = '1') then
 		if(falling_edge(clock)) then
-			if (load = '0' or load2 = '0') then		--
+			if (load = '1' or load2 = '1') then		--
+				pointer_aux <= dat;
+			else
 				if (I_D = '0') then
 					pointer_aux <= pointer_aux - 1;
 				else
 					pointer_aux <= pointer_aux + 1;
 				end if;
-			else
-				pointer_aux <= dat;
 			end if;
 		end if;
 	end if;

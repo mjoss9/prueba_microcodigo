@@ -463,10 +463,36 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
             -- BRI
           when x"35" => out_s <= "0000000000000100000000001000000001000" & usce_out;
             -- BSR
-          when x"36" => out_s <= "0000000000000101000000000000000001000" & usce_out;
+          when x"36" => out_s <= "0011100000100101000000000000000000110" & usce_out;
             -- RET
-          when x"37" => out_s <= "0000000000000110000000000000000000101" & usce_out;
+          when x"37" => out_s <= "0000000001100110000000000000000000111" & usce_out;
             -- Instrucciones de manejo de la pila
+            -- Guardar en pila
+            -- GPI A
+          when x"42" => out_s <= "0000000000000110000000000000000000101" & usce_out;
+            -- GPI B
+          when x"52" => out_s <= "0000000000000110000000000000000000101" & usce_out;
+            -- GPI C
+          when x"62" => out_s <= "0000000000000110000000000000000000101" & usce_out;
+            -- GPI X
+          when x"C2" => out_s <= "1000100000100100000000000000000001100" & usce_out;
+            -- GPI Y
+          when x"D2" => out_s <= "0000000000000110000000000000000000101" & usce_out;
+            -- GPI F
+          when x"E2" => out_s <= "0000000000000110000000000000000000101" & usce_out;
+            -- Recuperar de la pila
+            -- RPI A
+          when x"40" => out_s <= "0000000000000110000000000000000000101" & usce_out;
+            -- RPI B
+          when x"50" => out_s <= "0000000000000110000000000000000000101" & usce_out;
+            -- RPI C
+          when x"60" => out_s <= "0000000000000110000000000000000000101" & usce_out;
+            -- RPI X
+          when x"C0" => out_s <= "0000000000000110000000000000000000101" & usce_out;
+            -- RPI Y
+          when x"D0" => out_s <= "0000000000000110000000000000000000101" & usce_out;
+            -- RPI F
+          when x"E0" => out_s <= "0000000000000110000000000000000000101" & usce_out;
 
           when others => out_s <= "0000000000000100000000000000000000001" & usce_out;
          end case;
