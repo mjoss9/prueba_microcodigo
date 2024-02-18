@@ -42,17 +42,17 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
          case in_s is
            -- Instrucciones Logicas - Aritmeticas
             -- NEG
-          when x"43" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"C3" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"43" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"C3" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
             -- NOT
-          when x"44" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"C4" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"44" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"C4" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
             -- INC
-          when x"53" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"D3" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"53" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"D3" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
             -- DEC
-          when x"54" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"D4" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"54" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"D4" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
             -- AND A
           when x"05" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
           when x"85" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
@@ -127,30 +127,30 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
           when x"AC" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
           -- Instrucciones de control
           -- CLR
-          when x"41" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"C1" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"41" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"C1" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
           -- Instrucciones de rotacion y dezplaamiento
             -- ROD
-          when x"4D" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"CD" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"4D" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"CD" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
             -- ROI
-          when x"4E" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"CE" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"4E" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"CE" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
             -- RCD
-          when x"5D" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"DD" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"5D" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"DD" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
             -- RCI
-          when x"5E" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"DE" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"5E" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"DE" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
             -- DAD
-          when x"6D" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"ED" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"6D" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"ED" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
             -- DAI
-          when x"6E" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"EE" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"6E" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"EE" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
             -- DLD
-          when x"7D" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"FD" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"7D" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"FD" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
             -- Instrucciones de transferencia
             -- LDA A
           when x"01" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
@@ -162,14 +162,14 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
           when x"21" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
           when x"A1" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
             -- STA A
-          when x"02" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"82" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"02" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"82" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
             -- STA B
-          when x"12" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"92" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"12" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"92" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
             -- STA C
-          when x"22" => out_s <= "0000000000000100000000000000000000100" & usce_out; --IX
-          when x"A2" => out_s <= "0000000100000100000000000000000000100" & usce_out; --IY
+          when x"22" => out_s <= "0100000000000100000000000000000000100" & usce_out; --IX
+          when x"A2" => out_s <= "0100000100000100000000000000000000100" & usce_out; --IY
 
           when others => out_s <= "0000000000000000000000010000000000000" & usce_out;
          end case;
@@ -390,11 +390,11 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
           when x"E1" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- LDA C,B
           when x"F1" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- LDA C,M
             -- STA A
-          when x"72" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- STA A,M
+          when x"72" => out_s <= "0100000000000100000000000000000000011" & usce_out; -- STA A,M
             -- STA B
-          when x"B2" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- STA B,M
+          when x"B2" => out_s <= "0100000000000100000000000000000000011" & usce_out; -- STA B,M
             -- STA C
-          when x"F2" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- STA C,M
+          when x"F2" => out_s <= "0100000000000100000000000000000000011" & usce_out; -- STA C,M
             -- Instrucciones de puntero de datos
             -- CMP X
           when x"3F" => out_s <= "0000000000000100000000000000000000010" & usce_out; -- CMP X,N
