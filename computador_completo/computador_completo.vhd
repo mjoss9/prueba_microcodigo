@@ -16,7 +16,7 @@ entity computador_completo is
         RDat_out : out integer range 0 to 65535;
         PI : out integer range 0 to 65535;
         Micro_secuencia : out std_logic_vector(3 downto 0);
-        signal_control : out std_LOGIC_VECTOR(22 downto 0);
+        signal_control : out std_LOGIC_VECTOR(23 downto 0);
         cod_ope : out std_LOGIC_VECTOR(7 downto 0);
         data_buss : out std_logic_vector(7 downto 0);
         addr_mem_micro : out std_logic_vector(7 downto 0);
@@ -99,11 +99,12 @@ end component PunteroI;
 -- Puntero de Datos
 component PDatos is
     port(RDat: in integer range 0 to 65535;	--Dato
-        RDatD: in integer range 0 to 255;
-        s: in std_logic_vector(60 downto 55);
-        PDat_EN: in std_logic;					--Habilitador del Puntero de Datos
-        clock: in std_logic;  --Incremento/decremento, cargar, habilitar, clock
-        IX,IY,PP,PDat: out integer range 0 to 65535);  --Puntero
+		RDatD: in integer range -128 to 127;
+		s: in std_logic_vector(60 downto 55);
+		PIndx_EN: in std_logic;					--Habilitador del Punteros Indexados
+		PP_EN: in std_logic;					--Habilitador del Puntero de Pila
+		clock: in std_logic;  --Incremento/decremento, cargar, habilitar, clock
+		IX,IY,PP,PDat: out integer range 0 to 65535 :=0);  --Puntero
 end component PDatos;
 
 -- Mux de 4 a 1 de 16 bits
@@ -205,7 +206,7 @@ component mem_micro_cod is
     port (
         clk : in std_logic;
         addr : in std_logic_vector(7 downto 0);
-        data : out std_logic_vector(22 downto 0)
+        data : out std_logic_vector(23 downto 0)
     );
 end component mem_micro_cod;
 
@@ -245,7 +246,7 @@ signal reg_direcciones : integer range 0 to 65535;
 signal descod_signals : std_logic_vector(67 downto 0);
 signal out_mux_micro : std_logic_vector(3 downto 0);
 signal microsec : std_logic_vector(3 downto 0);
-signal control_signals : std_logic_vector(22 downto 0);
+signal control_signals : std_logic_vector(23 downto 0);
 
 begin
 ----------------- Conexiones UNIDAD DE EJECUCION ---------------------
@@ -317,28 +318,28 @@ Reg_banderas : reg_flags port map(
 Reg_I2 : registro port map(
     in_0 => data_bus,
     clock => clk,
-    control => control_signals(22), --CONTROL
+    control => control_signals(23), --CONTROL
     Q => cod_op2
 );
 -- Registro de Instruciones 1
 Reg_I : registro port map(
     in_0 => data_bus,
     clock => clk,
-    control => control_signals(21), --CONTROL
+    control => control_signals(22), --CONTROL
     Q => cod_op
 );
 -- Mux de 2 a 1 con salida de 8 bits
 Mux8b2a1_0 : mux8b2a1 port map(
     in_0 => cod_op,
     in_1 => cod_op2,
-    s => control_signals(20), --CONTROL
+    s => control_signals(21), --CONTROL
     y => cod_operacion
 );
 -- Registro de dezplazamiento de datos
 Reg_DatD : registro port map(
     in_0 => data_bus,
     clock => clk,
-    control => control_signals(19), --CONTROL
+    control => control_signals(20), --CONTROL
     Q => desplazamiento
 );
 -- Registro de datos
@@ -346,8 +347,8 @@ Reg_Dat : rdat port map(
     dataH => data_bus,
     dataL => data_bus,
     clock => clk,
-    ctrl_dataH => control_signals(18), --CONTROL
-    ctrl_dataL => control_signals(17), --CONTROL
+    ctrl_dataH => control_signals(19), --CONTROL
+    ctrl_dataL => control_signals(18), --CONTROL
     Q => out_reg_dat
 );
 -- Puntero de instrucciones
@@ -355,11 +356,11 @@ PunteroI1 : PunteroI port map(
     PI_in => pi_in,
     RDat_in => out_reg_dat,
     LR => out_lr, --LOGICA DE RAMIFICACION
-    load_Hab => control_signals(14), --CONTROL
-    ID_ctrl => control_signals(15), --CONTROL
-    EN_ctrl => control_signals(13), --CONTROL
+    load_Hab => control_signals(16), --CONTROL
+    ID_ctrl => control_signals(17), --CONTROL
+    EN_ctrl => control_signals(15), --CONTROL
     EN_descod => descod_signals(54), --DESCOD
-    MUX_ctrl => control_signals(12), --CONTROL
+    MUX_ctrl => control_signals(14), --CONTROL
     clock => clk,
     PI_out => pointer
 );
@@ -368,7 +369,8 @@ PunteroD : PDatos port map(
     RDat => out_reg_dat,
     RDatD => to_integer(unsigned(desplazamiento)),
     s => descod_signals(60 downto 55), --DESCODIFICADOR
-    PDat_EN => control_signals(11), --CONTROL
+    PIndx_EN => control_signals(13), --CONTROL
+    PP_EN => control_signals(12), --CONTROL
     clock => clk,
     IX => IX_out,
     IY => IY_out,
@@ -381,15 +383,15 @@ Mux16b4a1_0 : mux16b4a1 port map(
     in_1 => out_reg_dat,
     in_2 => PDat_out,
     in_3 => PP_out,
-    s => control_signals(10 downto 9), --CONTROL
+    s => control_signals(11 downto 10), --CONTROL
     y => mux_reg_direc
 );
 -- Registro de direcciones
 Reg_direc_0 : reg_direc port map(
     in_0 => mux_reg_direc,
     clock => clk,
-    control => control_signals(8), --CONTROL
-    I => control_signals(16), --CONTROL
+    control => control_signals(8) and (not descod_signals(62)), --CONTROL
+    I => control_signals(9), --CONTROL
     Q => reg_direcciones
 );
 -- Interfaz de memoria
@@ -506,7 +508,7 @@ descod1 <= descod_signals;
 RDat_out <= out_reg_dat;
 in_descod_ucod <= descod_signals(34 downto 31);
 mux_ctrl <= descod_signals(58);
-load_hab <= control_signals(14);
+load_hab <= control_signals(16);
 LR_pi <= out_lr;
 RDesp <= desplazamiento;
 
