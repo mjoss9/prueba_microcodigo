@@ -437,9 +437,9 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
             -- BNV
           when x"26" => out_s <= "0000000000000100000000000000000000101" & usce_out;
             -- BRP
-          when x"17" => out_s <= "0000000000000100000000000000000000101" & usce_out;
+          when x"27" => out_s <= "0000000000000100000000000000000000101" & usce_out;
             -- BRN
-          when x"27" => out_s <= "0000000000000100000000000000001000101" & usce_out;
+          when x"17" => out_s <= "0000000000000100000000000000001000101" & usce_out;
             -- BRZ
           when x"18" => out_s <= "0000000000000100000000000000010000101" & usce_out;
             -- BNZ

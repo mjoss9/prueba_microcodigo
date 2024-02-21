@@ -21,10 +21,10 @@ begin
     out_s(6) <= s(6) and not N;
     out_s(7) <= s(7) and not Z;
     out_s(8) <= s(8);
-    out_s(9) <= s(9) and Z and not (V xor N);
-    out_s(10) <= s(10) and Z and not (V xor N);
+    out_s(9) <= s(9) and not Z and not (V xor N);
+    out_s(10) <= s(10) and (Z or not (V xor N));
     out_s(11) <= s(11) and not Z and (V xor N);
-    out_s(12) <= s(12) and not Z and (V xor N);
+    out_s(12) <= s(12) and (Z or (V xor N));
     out_s(13) <= s(13) and C and not Z;
     out_s(14) <= s(15) and not C and not Z;
     out_s(15) <= s(14) and C;
