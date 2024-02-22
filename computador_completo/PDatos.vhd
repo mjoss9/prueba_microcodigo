@@ -26,7 +26,7 @@ architecture arch of PDatos is
 begin
 	Puntero_IX: Puntero port map (RDat,s(58),s(59),s(59),s(55) and PIndx_EN,clock,pointer_IX);
 	Puntero_IY: Puntero port map (RDat,s(58),s(59),s(59),s(56) and PIndx_EN,clock,pointer_IY);
-	Puntero_PP: Puntero port map (RDat,s(58),not (s(59) and s(58)) and s(59),not (s(59) and s(58)) and s(59),s(57) and PP_EN,clock,pointer_PP);
+	Puntero_PP: Puntero port map (RDat,s(58),s(59) and not s(58),s(59) and not s(58),s(57) and PP_EN,clock,pointer_PP);
 	process(s(60),PIndx_EN, PP_EN, pointer_IX, pointer_IY, pointer_PP, IXD, IYD)
 	begin
 	if(PIndx_EN = '1') then
