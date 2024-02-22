@@ -466,7 +466,7 @@ Logica_Ramificacion : LR port map(
 -- Decodificador de instrucciones
 DescodCC_0 : descodCC port map(
     in_s => cod_operacion,
-    ctrl_index => control_signals(20), --CONTROL
+    ctrl_index => control_signals(21), --CONTROL
     out_s => descod_signals
 );
 -- Mux de 4 bits 2 a 1
