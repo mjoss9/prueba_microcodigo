@@ -217,7 +217,8 @@ component generador_microsec is
     port(
         clk: in std_logic;
         reset: in std_logic;
-        enable : in std_logic;
+        enable: in std_logic; -- Control
+        enable_descod: in std_logic; -- Descodificador
         q: out std_logic_vector(3 downto 0)
     );
 end component generador_microsec;
@@ -492,6 +493,7 @@ Generador_microsec_0 : generador_microsec port map(
     clk => clk,
     reset => control_signals(1), --CONTROL
     enable => control_signals(0), --CONTROL
+    enable_descod => descod_signals(54), --DESCODIFICADOR
     q => microsec
 );
 
