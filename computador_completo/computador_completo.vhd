@@ -60,7 +60,8 @@ end component AcumuladorEN;
 component reg_flags is
     port (
         C_in, V_in, H_in, N_in, Z_in, P_in : in std_logic; -- Banderas provenientes del LCT de banderas
-        s_14, s_17, s_19 : in std_logic; -- Signals del descodificador de instrucciones
+        flags_pila : in std_logic_vector(5 downto 0); -- Banderas provenientes de la pila
+        s_14, s_17, s_19, s_21 : in std_logic; -- Signals del descodificador de instrucciones
         s_ctrl: in std_logic; -- Signals de control del microcodigo
         clock : in std_logic; -- Reloj
         flags_out : out std_logic_vector(5 downto 0) -- Salida de las banderas
@@ -131,6 +132,7 @@ end component reg_direc;
 component InterfazMemo is
     port( IX,IY,PP, PI: in integer range 0 to 65535;
 		resALU: in std_logic_vector(7 downto 0);
+		resFlags: in std_logic_vector(7 downto 0);
 		s22: in std_logic;
 		s: in std_logic_vector(3 downto 0);
         ctrl_s: in std_logic_vector(3 downto 0);
@@ -305,9 +307,11 @@ Reg_banderas : reg_flags port map(
     N_in => out_flags_LCT(3),
     Z_in => out_flags_LCT(4),
     P_in => out_flags_LCT(5),
+    flags_pila => data_bus(5 downto 0),
     s_14 => descod_signals(14),  --DESCODIFICADOR
     s_17 => descod_signals(17),  --DESCODIFICADOR
     s_19 => descod_signals(19),  --DESCODIFICADOR
+    s_21 => descod_signals(21),  --DESCODIFICADOR
     s_ctrl => control_signals(2),  --CONTROL
     clock => clk,
     flags_out => reg_flags_out
@@ -401,6 +405,7 @@ InterfazMem_0 : InterfazMemo port map(
     PP => PP_out,
     PI => pointer,
     resALU => out_alu,
+    resFlags => "00"&reg_flags_out,
     s22 => descod_signals(22), --DESCODIFICADOR
     s => descod_signals(66 downto 63), --DESCODIFICADOR
     ctrl_s => control_signals(6 downto 3), --DESCODIFICADOR
@@ -507,7 +512,7 @@ rd <= reg_direcciones;
 descod1 <= descod_signals;
 RDat_out <= out_reg_dat;
 in_descod_ucod <= descod_signals(34 downto 31);
-mux_ctrl <= descod_signals(58);
+mux_ctrl <= descod_signals(22);
 load_hab <= control_signals(16);
 LR_pi <= out_lr;
 RDesp <= desplazamiento;

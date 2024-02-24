@@ -91,7 +91,7 @@ begin
       when x"EC" =>  out_s <= "0000111000011101101011000011011"; -- cmp CB
 		  
 		  -- Instrucciones con dato inmediato
-		when x"45" =>  out_s <= "0010010000010000000000000000000"; -- and A_N
+		  when x"45" =>  out_s <= "0010010000010000000000000000000"; -- and A_N
       when x"85" =>  out_s <= "0100010100010000000000000000000"; -- and B_N
       when x"C5" =>  out_s <= "1000011000010000000000000000000"; -- and C_N
 
@@ -176,8 +176,8 @@ begin
       when x"12" =>  out_s <= "0100000000010000000011000001000"; -- in B
       when x"22" =>  out_s <= "1000000000010000000011000001000"; -- in C
 		-- Instrucciones de carga de dato inmediato
-		when x"41" =>  out_s <= "0010010000010000000011000001000"; -- lda A_N
-		when x"81" =>  out_s <= "0100010000010000000011000001000"; -- lda B_N
+		  when x"41" =>  out_s <= "0010010000010000000011000001000"; -- lda A_N
+		  when x"81" =>  out_s <= "0100010000010000000011000001000"; -- lda B_N
       when x"C1" =>  out_s <= "1000010000010000000011000001000"; -- lda C_N
         -- Instrucciones de carga de memoria
       when x"71" =>  out_s <= "0010010000010000000011000001000"; -- lda A_Mem

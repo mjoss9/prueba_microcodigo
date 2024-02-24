@@ -6,6 +6,7 @@ use ieee.numeric_std.all;
 entity InterfazMemo is
 port( IX,IY,PP, PI: in integer range 0 to 65535;
 		resALU: in std_logic_vector(7 downto 0);
+		resFlags: in std_logic_vector(7 downto 0);
 		s22: in std_logic;
 		s: in std_logic_vector(3 downto 0);
 		ctrl_s: in std_logic_vector(3 downto 0);
@@ -34,6 +35,7 @@ begin
 				PI_vect(15 downto 8) when "0110",
 				PI_vect(7 downto 0) when "0111",
 				resALU when "1000",
+				resFlags when "1001",
 				"00000000" when others;
 	-- process(s22)
 	-- begin
