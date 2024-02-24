@@ -397,9 +397,9 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
           when x"F2" => out_s <= "0100000000000100000000000000000000011" & usce_out; -- STA C,M
             -- Instrucciones de puntero de datos
             -- CMP X
-          when x"3F" => out_s <= "0000000000000100000000000000000000011" & usce_out; -- CMP X,N
+          when x"3F" => out_s <= "0000000000000100000000000000000000101" & "0000000000110100100000000000000"; -- CMP X,N
             -- CMP Y
-          when x"7F" => out_s <= "0000010000000100000000000000000000011" & usce_out; -- CMP Y,N
+          when x"7F" => out_s <= "0000010000000100000000000000000000101" & "0000000000110100100000000000000"; -- CMP Y,N
             -- INC X
           when x"83" => out_s <= "0000000001001100000000000000000000001" & usce_out; -- INC X
             -- INC Yf

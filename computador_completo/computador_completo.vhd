@@ -27,7 +27,7 @@ entity computador_completo is
         IY : out integer range 0 to 65535 := 0;
         PP : out integer range 0 to 65535 := 0;
         mux_ctrl, load_hab, LR_pi : out std_logic;
-		  RDesp : out std_logic_vector(7 downto 0)
+		RDesp : out std_logic_vector(7 downto 0)
     );
 end computador_completo;
 
@@ -394,7 +394,7 @@ Mux16b4a1_0 : mux16b4a1 port map(
 Reg_direc_0 : reg_direc port map(
     in_0 => mux_reg_direc,
     clock => clk,
-    control => control_signals(8) and (not descod_signals(62)), --CONTROL
+    control => control_signals(8), --CONTROL
     I => control_signals(9), --CONTROL
     Q => reg_direcciones
 );
@@ -512,9 +512,9 @@ rd <= reg_direcciones;
 descod1 <= descod_signals;
 RDat_out <= out_reg_dat;
 in_descod_ucod <= descod_signals(34 downto 31);
-mux_ctrl <= descod_signals(22);
-load_hab <= control_signals(16);
-LR_pi <= out_lr;
+mux_ctrl <= descod_signals(20);
+load_hab <= control_signals(2);
+LR_pi <= descod_signals(19);
 RDesp <= desplazamiento;
 
 end rtl;
