@@ -11,23 +11,12 @@ entity computador_completo is
         B : inout std_logic_vector(7 downto 0);
         C : inout std_logic_vector(7 downto 0);
         flags : buffer std_logic_vector(5 downto 0);
-        RI : out std_LOGIC_VECTOR(7 downto 0);
-        RI2 : out std_LOGIC_VECTOR(7 downto 0);
-        RDat_out : out integer range 0 to 65535;
         PI : out integer range 0 to 65535;
-        Micro_secuencia : out std_logic_vector(3 downto 0);
-        signal_control : out std_LOGIC_VECTOR(23 downto 0);
-        cod_ope : out std_LOGIC_VECTOR(7 downto 0);
         data_buss : out std_logic_vector(7 downto 0);
-        addr_mem_micro : out std_logic_vector(7 downto 0);
         rd : out integer range 0 to 65535;
-        descod1 : out std_logic_vector(67 downto 0);
-        in_descod_ucod : out std_logic_vector(3 downto 0);
         IX : out integer range 0 to 65535 := 0;
         IY : out integer range 0 to 65535 := 0;
-        PP : out integer range 0 to 65535 := 0;
-        mux_ctrl, load_hab, LR_pi : out std_logic;
-		RDesp : out std_logic_vector(7 downto 0)
+        PP : out integer range 0 to 65535 := 0
     );
 end computador_completo;
 
@@ -501,23 +490,9 @@ flags <= reg_flags_out;
 IX <= IX_out;
 IY <= IY_out;
 PP <= PP_out;
-
-RI <= cod_op;
-RI2 <= cod_op2;
 PI <= pointer;
-Micro_secuencia <= microsec;
-signal_control <= control_signals;
-cod_ope <= cod_operacion;
 data_buss <= data_bus;
-addr_mem_micro <= out_mux_micro&microsec;
 rd <= reg_direcciones;
-descod1 <= descod_signals;
-RDat_out <= out_reg_dat;
-in_descod_ucod <= descod_signals(34 downto 31);
-mux_ctrl <= descod_signals(20);
-load_hab <= control_signals(2);
-LR_pi <= descod_signals(19);
-RDesp <= desplazamiento;
 
 end rtl;
 
