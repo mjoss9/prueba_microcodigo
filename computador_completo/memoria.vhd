@@ -29,14 +29,13 @@ architecture rtl of memoria is
 		7 => x"C3", -- lda p
 		8 => x"00", -- 
 		9 => x"2C", -- 
-		10 => x"41", -- lda a, #0xff
-		11 => x"FF", --
-		12 => x"E2", -- gpi f
-		13 => x"83", -- inc x
-		14 => x"4C", -- cmp a, #0x09
-		15 => x"09", -- 
-		16 => x"E0", -- rpi f
-		17 => x"10", -- hlt
+		10 => x"12", -- lda a, ext
+		11 => x"E2", -- gpi f
+		12 => x"83", -- inc x
+		13 => x"4C", -- cmp a, #0x09
+		14 => x"09", -- 
+		15 => x"E0", -- rpi f
+		16 => x"10", -- hlt
 
 
         -- Finalizando a memoria com zeros

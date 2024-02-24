@@ -176,6 +176,11 @@ descodUSCE_0 : descodUSCE port map(in_s => in_descodUSCE, out_s => usce_out);
     else
       in_descodUSCE <= in_s;
          case in_s is
+           -- Instrucciones de entrada de datos
+            -- IN A
+          when x"02" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- IN A,dat ext
+          when x"12" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- IN B,dat ext
+          when x"22" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- IN C,dat ext
            -- Instrucciones Logicas - Aritmeticas
             -- NEG
           when x"03" => out_s <= "0000000000000100000000000000000000001" & usce_out; -- NEG A
