@@ -6,22 +6,34 @@ entity computador_completo is
     port (
         clk : in std_logic;
         pi_in : in integer range 0 to 65535;
-        data_in : in std_logic_vector(7 downto 0);
+        puerto_bidir: inout std_logic_vector(7 downto 0);
         A : inout std_logic_vector(7 downto 0);
         B : inout std_logic_vector(7 downto 0);
         C : inout std_logic_vector(7 downto 0);
         flags : buffer std_logic_vector(5 downto 0);
         PI : out integer range 0 to 65535;
-        data_buss : out std_logic_vector(7 downto 0);
-        rd : out integer range 0 to 65535;
+        -- data_buss : out std_logic_vector(7 downto 0);
+        RD : out integer range 0 to 65535;
         IX : out integer range 0 to 65535 := 0;
         IY : out integer range 0 to 65535 := 0;
-        PP : out integer range 0 to 65535 := 0
+        PP : out integer range 0 to 65535 := 0;
+        RI : out std_LOGIC_VECTOR(7 downto 0);
+        ctrl_puerto : out std_logic
     );
 end computador_completo;
 
 architecture rtl of computador_completo is
 ------------------ COMPONENTES PARA LA UNIDAD DE EJECUCION ----------------
+-- Interfaz para puerto bidireccional
+component interfaz_puerto is
+    Port (
+        puerto  : inout std_logic_vector(7 downto 0);
+		ctrl_port, clock   : in std_logic;
+		bus_ext_out : in std_logic_vector(7 downto 0);
+        bus_ext_in  : out std_logic_vector(7 downto 0);
+		U24        : in std_logic
+    );
+end component interfaz_puerto;
 -- ALU
 component ALU_mux is
     port(
@@ -181,7 +193,7 @@ component descodCC is
     port(
       in_s: in std_logic_vector(7 downto 0);
       ctrl_index: in std_logic;
-      out_s: out std_logic_vector(67 downto 0)
+      out_s: out std_logic_vector(68 downto 0)
   );
 end component descodCC;
 
@@ -197,7 +209,7 @@ component mem_micro_cod is
     port (
         clk : in std_logic;
         addr : in std_logic_vector(7 downto 0);
-        data : out std_logic_vector(23 downto 0)
+        data : out std_logic_vector(24 downto 0)
     );
 end component mem_micro_cod;
 
@@ -235,14 +247,25 @@ signal PDat_out : integer range 0 to 65535;
 signal mux_reg_direc : integer range 0 to 65535;
 signal reg_direcciones : integer range 0 to 65535;
 
-signal descod_signals : std_logic_vector(67 downto 0);
+signal descod_signals : std_logic_vector(68 downto 0);
 signal out_mux_micro : std_logic_vector(3 downto 0);
 signal microsec : std_logic_vector(3 downto 0);
-signal control_signals : std_logic_vector(23 downto 0);
+signal control_signals : std_logic_vector(24 downto 0);
+signal data_in : std_logic_vector(7 downto 0);
 
 begin
 ----------------- Conexiones UNIDAD DE EJECUCION ---------------------
 -------------------------------------------------------------------------------
+-- Interfaz para puerto bidireccional
+InterfazPuerto_0 : interfaz_puerto port map(
+    puerto => puerto_bidir,
+    ctrl_port => descod_signals(68), --CONTROL
+    clock => clk,
+    bus_ext_out => out_alu,
+    bus_ext_in => data_in,
+    U24 => control_signals(24) --DESCODIFICADOR
+);
+
 -- Conexiones entre ALU, acumuladores y registro de banderas
 ALU_1 : ALU_mux port map(
     in_a_0 => A,
@@ -491,8 +514,10 @@ IX <= IX_out;
 IY <= IY_out;
 PP <= PP_out;
 PI <= pointer;
-data_buss <= data_bus;
-rd <= reg_direcciones;
+-- data_buss <= data_bus;
+RD <= reg_direcciones;
+RI <= cod_op;
+ctrl_puerto <= descod_signals(68);
 
 end rtl;
 

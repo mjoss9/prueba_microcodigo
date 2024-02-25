@@ -17,7 +17,7 @@ architecture rtl of reg_flags is
     -- Proceso de registro de banderas
     process (clock)
     begin
-      if rising_edge(clock) then
+      if falling_edge(clock) then
         if s_ctrl = '1' then
           if s_14 = '1' then
             flags_out(0) <= C_in;
