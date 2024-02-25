@@ -15,7 +15,7 @@ end memoria;
 architecture rtl of memoria is
 	-- Build a 2-D array type for the RAM
 	subtype word_t is std_logic_vector(7 downto 0);
-	type datos is array (53760 downto 0) of word_t;
+	type datos is array (53759 downto 0) of word_t;
 	
 	-- Declare the RAM signal.
 	signal ram : datos := (
