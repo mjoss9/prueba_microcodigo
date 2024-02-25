@@ -7,12 +7,11 @@ entity computador_completo is
         clk : in std_logic;
         pi_in : in integer range 0 to 65535;
         puerto_bidir: inout std_logic_vector(7 downto 0);
-        A : inout std_logic_vector(7 downto 0);
-        B : inout std_logic_vector(7 downto 0);
-        C : inout std_logic_vector(7 downto 0);
-        flags : buffer std_logic_vector(5 downto 0);
+        A : out std_logic_vector(7 downto 0);
+        B : out std_logic_vector(7 downto 0);
+        C : out std_logic_vector(7 downto 0);
+        flags : out std_logic_vector(5 downto 0);
         PI : out integer range 0 to 65535;
-        -- data_buss : out std_logic_vector(7 downto 0);
         RD : out integer range 0 to 65535;
         IX : out integer range 0 to 65535 := 0;
         IY : out integer range 0 to 65535 := 0;
@@ -253,6 +252,10 @@ signal microsec : std_logic_vector(3 downto 0);
 signal control_signals : std_logic_vector(24 downto 0);
 signal data_in : std_logic_vector(7 downto 0);
 
+signal A_aux: std_logic_vector(7 downto 0);
+signal B_aux: std_logic_vector(7 downto 0);
+signal C_aux: std_logic_vector(7 downto 0);
+
 begin
 ----------------- Conexiones UNIDAD DE EJECUCION ---------------------
 -------------------------------------------------------------------------------
@@ -268,14 +271,14 @@ InterfazPuerto_0 : interfaz_puerto port map(
 
 -- Conexiones entre ALU, acumuladores y registro de banderas
 ALU_1 : ALU_mux port map(
-    in_a_0 => A,
-    in_a_1 => B,
-    in_a_2 => C,
+    in_a_0 => A_aux,
+    in_a_1 => B_aux,
+    in_a_2 => C_aux,
     in_b_0 => data_in,
     in_b_1 => data_bus,
-    in_b_2 => A,
-    in_b_3 => B,
-    in_b_4 => C,
+    in_b_2 => A_aux,
+    in_b_3 => B_aux,
+    in_b_4 => C_aux,
     sel_a => descod_signals(24 downto 23),  --DESCODIFICADOR
     sel_b => descod_signals(27 downto 25),  --DESCODIFICADOR
     sel_alu => descod_signals(11 downto 0),  --DESCODIFICADOR
@@ -288,26 +291,26 @@ ALU_1 : ALU_mux port map(
     alu_Z => out_flags_alu(4),
     alu_P => out_flags_alu(5)
 );
--- Acumulador A
+-- Acumulador A_aux
 AcumuladorA : AcumuladorEN port map(
     inAc => out_alu,
-    outAc => A,
+    outAc => A_aux,
     enAc => control_signals(2),  --CONTROL
     ctrlAc => descod_signals(28),  --DESCODIFICADOR
     clk => clk
 );
--- Acumulador B
+-- Acumulador B_aux
 AcumuladorB : AcumuladorEN port map(
     inAc => out_alu,
-    outAc => B,
+    outAc => B_aux,
     enAc => control_signals(2),  --CONTROL
     ctrlAc => descod_signals(29),  --DESCODIFICADOR
     clk => clk
 );
--- Acumulador C
+-- Acumulador C_aux
 AcumuladorC : AcumuladorEN port map(
     inAc => out_alu,
-    outAc => C,
+    outAc => C_aux,
     enAc => control_signals(2),  --CONTROL
     ctrlAc => descod_signals(30),  --DESCODIFICADOR
     clk => clk
@@ -509,12 +512,16 @@ Generador_microsec_0 : generador_microsec port map(
     q => microsec
 );
 
+------------------------------------------------------------------------------------------------------
+-- Designacion de salidas
+A <= A_aux;
+B <= B_aux;
+C <= C_aux;
 flags <= reg_flags_out;
 IX <= IX_out;
 IY <= IY_out;
 PP <= PP_out;
 PI <= pointer;
--- data_buss <= data_bus;
 RD <= reg_direcciones;
 RI <= cod_op;
 ctrl_puerto <= descod_signals(68);
