@@ -10,8 +10,12 @@ entity computador_completo is
         A : out std_logic_vector(7 downto 0);
         B : out std_logic_vector(7 downto 0);
         C : out std_logic_vector(7 downto 0);
+        A_hex : out std_logic_vector(13 downto 0);
+        B_hex : out std_logic_vector(13 downto 0);
+        C_hex : out std_logic_vector(13 downto 0);
         flags : out std_logic_vector(5 downto 0);
         PI : out integer range 0 to 65535;
+        PI_7seg : out std_logic_vector(27 downto 0);
         RD : out integer range 0 to 65535;
         IX : out integer range 0 to 65535 := 0;
         IY : out integer range 0 to 65535 := 0;
@@ -223,6 +227,14 @@ component generador_microsec is
     );
 end component generador_microsec;
 
+-- Conversor de 4 bits a 7 segmentos
+component descod7seg is
+    port(
+        DataIn: in std_logic_vector(3 downto 0);
+        LED_out: out std_logic_vector(6 downto 0)
+    );
+end component descod7seg;
+
 ------------------ Signal internas
 ------------------------------------------------
 signal data_bus : std_logic_vector(7 downto 0);
@@ -256,7 +268,11 @@ signal A_aux: std_logic_vector(7 downto 0);
 signal B_aux: std_logic_vector(7 downto 0);
 signal C_aux: std_logic_vector(7 downto 0);
 
+signal PI_hex : std_logic_vector(15 downto 0);
+
 begin
+
+PI_hex <= std_logic_vector(to_unsigned(pointer, 16));
 ----------------- Conexiones UNIDAD DE EJECUCION ---------------------
 -------------------------------------------------------------------------------
 -- Interfaz para puerto bidireccional
@@ -512,6 +528,21 @@ Generador_microsec_0 : generador_microsec port map(
     q => microsec
 );
 
+-- Conversor de 4 bits a 7 segmentos para PI
+Descod7seg_0 : descod7seg port map(PI_hex(3 downto 0), PI_7seg(6 downto 0));
+Descod7seg_1 : descod7seg port map(PI_hex(7 downto 4), PI_7seg(13 downto 7));
+Descod7seg_2 : descod7seg port map(PI_hex(11 downto 8), PI_7seg(20 downto 14));
+Descod7seg_3 : descod7seg port map(PI_hex(15 downto 12), PI_7seg(27 downto 21));
+
+-- Conversor de 4 bits a 7 segmentos para A
+Descod7seg_4 : descod7seg port map(A_aux(3 downto 0), A_hex(6 downto 0));
+Descod7seg_5 : descod7seg port map(A_aux(7 downto 4), A_hex(13 downto 7));
+-- Conversor de 4 bits a 7 segmentos para B_aux
+Descod7seg_6 : descod7seg port map(B_aux(3 downto 0), B_hex(6 downto 0));
+Descod7seg_7 : descod7seg port map(B_aux(7 downto 4), B_hex(13 downto 7));
+-- Conversor de 4 bits a 7 segmentos para C_aux
+Descod7seg_8 : descod7seg port map(C_aux(3 downto 0), C_hex(6 downto 0));
+Descod7seg_9 : descod7seg port map(C_aux(7 downto 4), C_hex(13 downto 7));
 ------------------------------------------------------------------------------------------------------
 -- Designacion de salidas
 A <= A_aux;
