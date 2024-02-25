@@ -16,7 +16,7 @@ end entity generador_microsec;
 architecture rtl of generador_microsec is
     signal q_int: unsigned(3 downto 0) := (others => '0');
 begin
-    process(clk, reset, enable)
+    process(clk, reset, enable, enable_descod)
     begin
         if (enable = '1' and enable_descod = '1') then
             if falling_edge(clk) then

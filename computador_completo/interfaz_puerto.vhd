@@ -26,7 +26,7 @@ begin
         end if;
     end process;
 
-    process(ctrl_port, puerto)
+    process(ctrl_port, puerto, a_in)
     begin
         if (ctrl_port = '1') then
             puerto <= "ZZZZZZZZ";
