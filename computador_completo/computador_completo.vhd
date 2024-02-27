@@ -26,6 +26,11 @@ entity computador_completo is
 end computador_completo;
 
 architecture rtl of computador_completo is
+------------------- Componente para el divisor de frecuencia----------------
+component divisor_frecuencia is
+    port (clk : in std_logic;
+    clk_1Hz : out std_logic);
+end component divisor_frecuencia;
 ------------------ COMPONENTES PARA LA UNIDAD DE EJECUCION ----------------
 -- Interfaz para puerto bidireccional
 component interfaz_puerto is
@@ -237,6 +242,7 @@ end component descod7seg;
 
 ------------------ Signal internas
 ------------------------------------------------
+signal clock : std_logic;
 signal data_bus : std_logic_vector(7 downto 0);
 signal out_interfaz_mem : std_logic_vector(7 downto 0);
 signal out_alu : std_logic_vector(7 downto 0);
@@ -273,13 +279,20 @@ signal PI_hex : std_logic_vector(15 downto 0);
 begin
 
 PI_hex <= std_logic_vector(to_unsigned(pointer, 16));
+--clock <= clk;
+----------------- Conexiones para el divisor de frecuencia ---------------------
+-------------------------------------------------------------------------------
+Divisor_frecuencia_0 : divisor_frecuencia port map(
+    clk => clk,
+    clk_1Hz => clock
+);
 ----------------- Conexiones UNIDAD DE EJECUCION ---------------------
 -------------------------------------------------------------------------------
 -- Interfaz para puerto bidireccional
 InterfazPuerto_0 : interfaz_puerto port map(
     puerto => puerto_bidir,
     ctrl_port => descod_signals(68), --CONTROL
-    clock => clk,
+    clock => clock,
     bus_ext_out => out_alu,
     bus_ext_in => data_in,
     U24 => control_signals(24) --DESCODIFICADOR
@@ -313,7 +326,7 @@ AcumuladorA : AcumuladorEN port map(
     outAc => A_aux,
     enAc => control_signals(2),  --CONTROL
     ctrlAc => descod_signals(28),  --DESCODIFICADOR
-    clk => clk
+    clk => clock
 );
 -- Acumulador B_aux
 AcumuladorB : AcumuladorEN port map(
@@ -321,7 +334,7 @@ AcumuladorB : AcumuladorEN port map(
     outAc => B_aux,
     enAc => control_signals(2),  --CONTROL
     ctrlAc => descod_signals(29),  --DESCODIFICADOR
-    clk => clk
+    clk => clock
 );
 -- Acumulador C_aux
 AcumuladorC : AcumuladorEN port map(
@@ -329,7 +342,7 @@ AcumuladorC : AcumuladorEN port map(
     outAc => C_aux,
     enAc => control_signals(2),  --CONTROL
     ctrlAc => descod_signals(30),  --DESCODIFICADOR
-    clk => clk
+    clk => clock
 );
 -- Registro de banderas
 Reg_banderas : reg_flags port map(
@@ -345,7 +358,7 @@ Reg_banderas : reg_flags port map(
     s_19 => descod_signals(19),  --DESCODIFICADOR
     s_21 => descod_signals(21),  --DESCODIFICADOR
     s_ctrl => control_signals(2),  --CONTROL
-    clock => clk,
+    clock => clock,
     flags_out => reg_flags_out
 );
 ----------------- Conexiones UNIDAD DE DIRECCIONAMIENTO ---------------------
@@ -353,14 +366,14 @@ Reg_banderas : reg_flags port map(
 -- Registro de Instruciones 2
 Reg_I2 : registro port map(
     in_0 => data_bus,
-    clock => clk,
+    clock => clock,
     control => control_signals(23), --CONTROL
     Q => cod_op2
 );
 -- Registro de Instruciones 1
 Reg_I : registro port map(
     in_0 => data_bus,
-    clock => clk,
+    clock => clock,
     control => control_signals(22), --CONTROL
     Q => cod_op
 );
@@ -374,7 +387,7 @@ Mux8b2a1_0 : mux8b2a1 port map(
 -- Registro de dezplazamiento de datos
 Reg_DatD : registro port map(
     in_0 => data_bus,
-    clock => clk,
+    clock => clock,
     control => control_signals(20), --CONTROL
     Q => desplazamiento
 );
@@ -382,7 +395,7 @@ Reg_DatD : registro port map(
 Reg_Dat : rdat port map(
     dataH => data_bus,
     dataL => data_bus,
-    clock => clk,
+    clock => clock,
     ctrl_dataH => control_signals(19), --CONTROL
     ctrl_dataL => control_signals(18), --CONTROL
     Q => out_reg_dat
@@ -397,7 +410,7 @@ PunteroI1 : PunteroI port map(
     EN_ctrl => control_signals(15), --CONTROL
     EN_descod => descod_signals(54), --DESCOD
     MUX_ctrl => control_signals(14), --CONTROL
-    clock => clk,
+    clock => clock,
     PI_out => pointer
 );
 -- Puntero de datos
@@ -407,7 +420,7 @@ PunteroD : PDatos port map(
     s => descod_signals(60 downto 55), --DESCODIFICADOR
     PIndx_EN => control_signals(13), --CONTROL
     PP_EN => control_signals(12), --CONTROL
-    clock => clk,
+    clock => clock,
     IX => IX_out,
     IY => IY_out,
     PP => PP_out,
@@ -425,7 +438,7 @@ Mux16b4a1_0 : mux16b4a1 port map(
 -- Registro de direcciones
 Reg_direc_0 : reg_direc port map(
     in_0 => mux_reg_direc,
-    clock => clk,
+    clock => clock,
     control => control_signals(8), --CONTROL
     I => control_signals(9), --CONTROL
     Q => reg_direcciones
@@ -447,7 +460,7 @@ InterfazMem_0 : InterfazMemo port map(
 -- Conexiones para la memoria
 MEMORIA_0 : memoria port map(
     control => control_signals(7), ---CONTROL
-    clock => clk,
+    clock => clock,
     s_22 => descod_signals(22), ---DESCODIFICADOR
     address => reg_direcciones,
     data_in => out_interfaz_mem,
@@ -515,13 +528,13 @@ Mux4b2a1_0 : mux4b2a1 port map(
 );
 -- Memoria de microcodigo
 Mem_micro_cod_0 : mem_micro_cod port map(
-    clk => clk,
+    clk => clock,
     addr => out_mux_micro&microsec,
     data => control_signals
 );
 -- Generador de microsecuencia
 Generador_microsec_0 : generador_microsec port map(
-    clk => clk,
+    clk => clock,
     reset => control_signals(1), --CONTROL
     enable => control_signals(0), --CONTROL
     enable_descod => descod_signals(54), --DESCODIFICADOR
