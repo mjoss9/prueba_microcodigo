@@ -21,7 +21,8 @@ entity computador_completo is
         IY : out integer range 0 to 65535 := 0;
         PP : out integer range 0 to 65535 := 0;
         RI : out std_LOGIC_VECTOR(7 downto 0);
-        ctrl_puerto : out std_logic
+        ctrl_puerto : out std_logic;
+        enable : in std_logic
     );
 end computador_completo;
 
@@ -279,13 +280,13 @@ signal PI_hex : std_logic_vector(15 downto 0);
 begin
 
 PI_hex <= std_logic_vector(to_unsigned(pointer, 16));
---clock <= clk;
+clock <= clk;
 ----------------- Conexiones para el divisor de frecuencia ---------------------
 -------------------------------------------------------------------------------
-Divisor_frecuencia_0 : divisor_frecuencia port map(
-    clk => clk,
-    clk_1Hz => clock
-);
+-- Divisor_frecuencia_0 : divisor_frecuencia port map(
+--     clk => clk,
+--     clk_1Hz => clock
+-- );
 ----------------- Conexiones UNIDAD DE EJECUCION ---------------------
 -------------------------------------------------------------------------------
 -- Interfaz para puerto bidireccional
@@ -536,7 +537,7 @@ Mem_micro_cod_0 : mem_micro_cod port map(
 Generador_microsec_0 : generador_microsec port map(
     clk => clock,
     reset => control_signals(1), --CONTROL
-    enable => control_signals(0), --CONTROL
+    enable => enable,
     enable_descod => descod_signals(54), --DESCODIFICADOR
     q => microsec
 );
