@@ -359,6 +359,19 @@ architecture rtl of memoria is
 		337 => x"11",
 		338 => x"37",
 
+
+		-- Programa de cargado
+		400 => x"C3", -- lda p
+		401 => x"00", -- 
+		402 => x"2C", -- 
+		403 => x"12", -- lda a, ext
+		404 => x"E2", -- gpi f
+		405 => x"83", -- inc x
+		406 => x"4C", -- cmp a, #0x09
+		407 => x"09", -- 
+		408 => x"E0", -- rpi f
+		409 => x"10", -- hlt
+
         -- Finalizando a memoria com zeros
         others => "00000000"
     );

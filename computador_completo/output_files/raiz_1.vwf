@@ -2342,6 +2342,56 @@ SIGNAL("RI[0]")
 	PARENT = "RI";
 }
 
+SIGNAL("microsecuencia")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = BUS;
+	WIDTH = 4;
+	LSB_INDEX = 0;
+	DIRECTION = OUTPUT;
+	PARENT = "";
+}
+
+SIGNAL("microsecuencia[3]")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = OUTPUT;
+	PARENT = "microsecuencia";
+}
+
+SIGNAL("microsecuencia[2]")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = OUTPUT;
+	PARENT = "microsecuencia";
+}
+
+SIGNAL("microsecuencia[1]")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = OUTPUT;
+	PARENT = "microsecuencia";
+}
+
+SIGNAL("microsecuencia[0]")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = OUTPUT;
+	PARENT = "microsecuencia";
+}
+
 TRANSITION_LIST("A[7]")
 {
 	NODE
@@ -2943,9 +2993,9 @@ TRANSITION_LIST("clk")
 		REPEAT = 1;
 		NODE
 		{
-			REPEAT = 1000;
-			LEVEL 0 FOR 0.5;
-			LEVEL 1 FOR 0.5;
+			REPEAT = 100;
+			LEVEL 0 FOR 5.0;
+			LEVEL 1 FOR 5.0;
 		}
 	}
 }
@@ -2964,7 +3014,13 @@ TRANSITION_LIST("enable")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 1 FOR 1000.0;
+		LEVEL 1 FOR 400.0;
+		LEVEL 0 FOR 50.0;
+		LEVEL 1 FOR 70.0;
+		LEVEL 0 FOR 80.0;
+		LEVEL 1 FOR 40.0;
+		LEVEL 0 FOR 70.0;
+		LEVEL 1 FOR 290.0;
 	}
 }
 
@@ -3792,8 +3848,7 @@ TRANSITION_LIST("pi_in[6]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 1 FOR 80.0;
-		LEVEL 0 FOR 920.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -3820,8 +3875,7 @@ TRANSITION_LIST("pi_in[3]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 1 FOR 80.0;
-		LEVEL 0 FOR 920.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -3830,7 +3884,7 @@ TRANSITION_LIST("pi_in[2]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 1000.0;
+		LEVEL 1 FOR 1000.0;
 	}
 }
 
@@ -3839,8 +3893,7 @@ TRANSITION_LIST("pi_in[1]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 1 FOR 80.0;
-		LEVEL 0 FOR 920.0;
+		LEVEL 1 FOR 1000.0;
 	}
 }
 
@@ -3849,8 +3902,7 @@ TRANSITION_LIST("pi_in[0]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 1 FOR 80.0;
-		LEVEL 0 FOR 920.0;
+		LEVEL 1 FOR 1000.0;
 	}
 }
 
@@ -4003,7 +4055,7 @@ TRANSITION_LIST("puerto_bidir[7]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL Z FOR 1000.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -4012,7 +4064,7 @@ TRANSITION_LIST("puerto_bidir[6]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL Z FOR 1000.0;
+		LEVEL 1 FOR 1000.0;
 	}
 }
 
@@ -4021,7 +4073,7 @@ TRANSITION_LIST("puerto_bidir[5]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL Z FOR 1000.0;
+		LEVEL 1 FOR 1000.0;
 	}
 }
 
@@ -4030,7 +4082,7 @@ TRANSITION_LIST("puerto_bidir[4]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL Z FOR 1000.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -4039,7 +4091,7 @@ TRANSITION_LIST("puerto_bidir[3]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL Z FOR 1000.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -4048,7 +4100,7 @@ TRANSITION_LIST("puerto_bidir[2]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL Z FOR 1000.0;
+		LEVEL 1 FOR 1000.0;
 	}
 }
 
@@ -4057,7 +4109,7 @@ TRANSITION_LIST("puerto_bidir[1]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL Z FOR 1000.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -4066,7 +4118,7 @@ TRANSITION_LIST("puerto_bidir[0]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL Z FOR 1000.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -4278,6 +4330,42 @@ TRANSITION_LIST("RI[1]")
 }
 
 TRANSITION_LIST("RI[0]")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL X FOR 1000.0;
+	}
+}
+
+TRANSITION_LIST("microsecuencia[3]")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL X FOR 1000.0;
+	}
+}
+
+TRANSITION_LIST("microsecuencia[2]")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL X FOR 1000.0;
+	}
+}
+
+TRANSITION_LIST("microsecuencia[1]")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL X FOR 1000.0;
+	}
+}
+
+TRANSITION_LIST("microsecuencia[0]")
 {
 	NODE
 	{
@@ -6591,6 +6679,56 @@ DISPLAY_LINE
 	TREE_INDEX = 230;
 	TREE_LEVEL = 1;
 	PARENT = 224;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "microsecuencia";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 231;
+	TREE_LEVEL = 0;
+	CHILDREN = 232, 233, 234, 235;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "microsecuencia[3]";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 232;
+	TREE_LEVEL = 1;
+	PARENT = 231;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "microsecuencia[2]";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 233;
+	TREE_LEVEL = 1;
+	PARENT = 231;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "microsecuencia[1]";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 234;
+	TREE_LEVEL = 1;
+	PARENT = 231;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "microsecuencia[0]";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 235;
+	TREE_LEVEL = 1;
+	PARENT = 231;
 }
 
 TIME_BAR

@@ -85,6 +85,7 @@ component registro is
         in_0 : in std_logic_vector (7 downto 0); --Entrada
         clock : in std_logic;         --Entrada clock
 		control : in std_logic := '0';
+        reset : in std_logic := '0';
 		Q : out std_logic_vector (7 downto 0));--Salida
 end component registro;
 
@@ -280,13 +281,13 @@ signal PI_hex : std_logic_vector(15 downto 0);
 begin
 
 PI_hex <= std_logic_vector(to_unsigned(pointer, 16));
-clock <= clk;
+-- clock <= clk;
 ----------------- Conexiones para el divisor de frecuencia ---------------------
 -------------------------------------------------------------------------------
--- Divisor_frecuencia_0 : divisor_frecuencia port map(
---     clk => clk,
---     clk_1Hz => clock
--- );
+Divisor_frecuencia_0 : divisor_frecuencia port map(
+    clk => clk,
+    clk_1Hz => clock
+);
 ----------------- Conexiones UNIDAD DE EJECUCION ---------------------
 -------------------------------------------------------------------------------
 -- Interfaz para puerto bidireccional
@@ -369,6 +370,7 @@ Reg_I2 : registro port map(
     in_0 => data_bus,
     clock => clock,
     control => control_signals(23), --CONTROL
+    reset => '0', 
     Q => cod_op2
 );
 -- Registro de Instruciones 1
@@ -376,6 +378,7 @@ Reg_I : registro port map(
     in_0 => data_bus,
     clock => clock,
     control => control_signals(22), --CONTROL
+    reset => not descod_signals(54) and not enable, --DESCODIFICADOR
     Q => cod_op
 );
 -- Mux de 2 a 1 con salida de 8 bits
@@ -390,6 +393,7 @@ Reg_DatD : registro port map(
     in_0 => data_bus,
     clock => clock,
     control => control_signals(20), --CONTROL
+    reset => '0',
     Q => desplazamiento
 );
 -- Registro de datos

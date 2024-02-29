@@ -26,6 +26,8 @@ begin
                     q_int <= q_int + 1;
                 end if;
             end if;
+        else
+            q_int <= (others => '0');
         end if;
     end process;
     q <= std_logic_vector(q_int);
