@@ -18,16 +18,17 @@ architecture rtl of generador_microsec is
 begin
     process(clk, reset, enable, enable_descod)
     begin
-        if (enable = '1' and enable_descod = '1') then
-            if falling_edge(clk) then
-                if reset = '1' then
-                    q_int <= (others => '0');
-                else
-                    q_int <= q_int + 1;
-                end if;
+        if falling_edge(clk) then
+            if (enable = '1' and enable_descod = '1') then
+                
+                    if reset = '1' then
+                        q_int <= (others => '0');
+                    else
+                        q_int <= q_int + 1;
+                    end if;
+            else
+                q_int <= (others => '0');
             end if;
-        else
-            q_int <= (others => '0');
         end if;
     end process;
     q <= std_logic_vector(q_int);
