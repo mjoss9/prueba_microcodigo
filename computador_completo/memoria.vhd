@@ -374,10 +374,10 @@ architecture rtl of memoria is
 
 		500 => x"C3", -- lda p,#PILA_ini ; preparar pila
 		501 => x"00",
-		502 => x"CF",
+		502 => x"28",
 		503 => x"8F", -- lda x,#Fibo0 ; apuntar a inicio de la serie
-		504 => x"01",
-		505 => x"00",
+		504 => x"02",
+		505 => x"BC",
 		506 => x"41", -- lda a,#SEMILLA0
 		507 => x"00",
 		508 => x"36", -- bsr plantar
@@ -389,11 +389,11 @@ architecture rtl of memoria is
 		514 => x"02",
 		515 => x"18",
 		516 => x"8F", -- lda x,#Fibo0
-		517 => x"01",
-		518 => x"00",
+		517 => x"02",
+		518 => x"BC",
 		519 => x"CF", -- lda y,#Fibo1
-		520 => x"01",
-		521 => x"01",
+		520 => x"02",
+		521 => x"BD",
 		522 => x"81", -- lda b,#N
 		523 => x"0D",
 		524 => x"54", -- dec b
